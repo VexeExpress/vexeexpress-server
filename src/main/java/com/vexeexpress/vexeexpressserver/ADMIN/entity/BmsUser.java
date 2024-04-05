@@ -22,6 +22,5 @@ public class BmsUser {
     private String password;
     private String address;
     private Boolean activateAccount;
-    @CreatedDate
     private Date createdDate;
 }

@@ -6,12 +6,10 @@ import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsBusCompanyRepositor
 import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BmsUserService {
@@ -19,6 +17,8 @@ public class BmsUserService {
     private BmsUserRepository bmsUserRepository;
     @Autowired
     private BmsBusCompanyRepository bmsBusCompanyRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public String addUser(BmsUser bmsUser){
         try {
             // Kiểm tra xem người dùng đã tồn tại hay chưa
@@ -27,6 +27,11 @@ public class BmsUserService {
                 System.out.println("Tài khoản đã tồn tại!");
                 return "Tài khoản đã tồn tại!";
             }
+            // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+            String encodedPassword = passwordEncoder.encode(bmsUser.getPassword());
+            bmsUser.setPassword(encodedPassword);
+            // Gán Ngày tạo
+            bmsUser.setCreatedDate(new Date());
             // Lưu người dùng vào cơ sở dữ liệu
             bmsUserRepository.save(bmsUser);
             System.out.println("Tạo tài khoản thành công!");
@@ -46,6 +51,7 @@ public class BmsUserService {
             userInfo.put("name", user.getOwnerName());
             userInfo.put("phone", user.getPhoneNumber());
             userInfo.put("address",user.getAddress());
+            userInfo.put("username", user.getUsername());
             userInfo.put("status", String.valueOf(user.getActivateAccount()));
             BmsBusCompany busCompany = bmsBusCompanyRepository.findByIdUser(user.getId());
             if(busCompany != null){
