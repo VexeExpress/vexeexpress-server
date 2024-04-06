@@ -25,27 +25,31 @@ public class VexeexpressServerApplication {
         SpringApplication.run(VexeexpressServerApplication.class, args);
 
     }
+
     @Bean
     public CommandLineRunner checkDatabaseConnection() {
         return args -> {
             String connectionString = "mongodb+srv://root:CVbn12345@vexeexpress.g7k9lqm.mongodb.net/VexeExpress?retryWrites=true&w=majority";
 
-            try (MongoClient mongoClient = MongoClients.create(connectionString)){
+            try {
+                MongoClient mongoClient = MongoClients.create(connectionString);
                 MongoDatabase database = mongoClient.getDatabase("VexeExpress");
                 System.out.println("Kết nối CSDL MongoDB thành công!");
-            } catch (MongoException e){
-                System.out.println("Kết nối CSDL MongoDB thất bại!");
-
+                mongoClient.close();
+            } catch (MongoException e) {
+                System.err.println("Kết nối CSDL MongoDB thất bại: " + e.getMessage());
+                e.printStackTrace();
             }
         };
     }
+
     @Configuration
-    public class WebConfig implements WebMvcConfigurer{
+    public class WebConfig implements WebMvcConfigurer {
         @Override
-        public void addCorsMappings(CorsRegistry registry){
-            registry.addMapping("/api/**").allowedOrigins("http://localhost:3000").allowedMethods("GET", "POST", "PUT", "DELETE");
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/api/**").allowedOrigins("http://localhost:3000").allowedMethods("GET", "POST", "PUT",
+                    "DELETE");
         }
     }
-
 
 }
