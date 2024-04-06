@@ -1,7 +1,7 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.service;
+package com.vexeexpress.vexeexpressserver.APP.ADMIN.service;
 
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.BmsBusCompany;
-import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsBusCompanyRepository;
+import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
+import com.vexeexpress.vexeexpressserver.APP.BMS.repository.BmsBusCompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

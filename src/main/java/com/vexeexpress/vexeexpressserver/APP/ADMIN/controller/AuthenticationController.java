@@ -1,7 +1,7 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.controller;
+package com.vexeexpress.vexeexpressserver.APP.ADMIN.controller;
 
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.Account;
-import com.vexeexpress.vexeexpressserver.ADMIN.service.AuthenticationService;
+import com.vexeexpress.vexeexpressserver.entity.Account;
+import com.vexeexpress.vexeexpressserver.APP.ADMIN.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

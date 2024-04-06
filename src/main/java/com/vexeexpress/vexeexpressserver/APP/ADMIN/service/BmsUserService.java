@@ -1,11 +1,10 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.service;
+package com.vexeexpress.vexeexpressserver.APP.ADMIN.service;
 
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.BmsBusCompany;
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.BmsUser;
-import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsBusCompanyRepository;
-import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsUserRepository;
+import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
+import com.vexeexpress.vexeexpressserver.entity.BmsUser;
+import com.vexeexpress.vexeexpressserver.APP.BMS.repository.BmsBusCompanyRepository;
+import com.vexeexpress.vexeexpressserver.APP.BMS.repository.BmsUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

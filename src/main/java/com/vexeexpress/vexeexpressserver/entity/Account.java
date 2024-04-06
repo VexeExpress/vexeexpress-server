@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.entity;
+package com.vexeexpress.vexeexpressserver.entity;
 
 import jakarta.persistence.Column;
 import lombok.Data;

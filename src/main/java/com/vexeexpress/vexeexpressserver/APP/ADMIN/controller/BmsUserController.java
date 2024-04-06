@@ -1,14 +1,13 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.controller;
+package com.vexeexpress.vexeexpressserver.APP.ADMIN.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.BmsBusCompany;
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.BmsUser;
-import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsBusCompanyRepository;
-import com.vexeexpress.vexeexpressserver.ADMIN.repository.BmsUserRepository;
-import com.vexeexpress.vexeexpressserver.ADMIN.service.BmsBusCompanyService;
-import com.vexeexpress.vexeexpressserver.ADMIN.service.BmsUserService;
+import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
+import com.vexeexpress.vexeexpressserver.entity.BmsUser;
+import com.vexeexpress.vexeexpressserver.APP.BMS.repository.BmsBusCompanyRepository;
+import com.vexeexpress.vexeexpressserver.APP.BMS.repository.BmsUserRepository;
+import com.vexeexpress.vexeexpressserver.APP.ADMIN.service.BmsBusCompanyService;
+import com.vexeexpress.vexeexpressserver.APP.ADMIN.service.BmsUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

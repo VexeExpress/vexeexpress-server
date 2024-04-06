@@ -33,7 +33,7 @@ public class VexeexpressServerApplication {
 
             try {
                 MongoClient mongoClient = MongoClients.create(connectionString);
-                MongoDatabase database = mongoClient.getDatabase("VexeExpress");
+                mongoClient.getDatabase("VexeExpress");
                 System.out.println("Kết nối CSDL MongoDB thành công!");
                 mongoClient.close();
             } catch (MongoException e) {

@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.entity;
+package com.vexeexpress.vexeexpressserver.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

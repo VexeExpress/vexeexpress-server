@@ -1,7 +1,7 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.service;
+package com.vexeexpress.vexeexpressserver.APP.ADMIN.service;
 
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.Account;
-import com.vexeexpress.vexeexpressserver.ADMIN.repository.AccountRepository;
+import com.vexeexpress.vexeexpressserver.entity.Account;
+import com.vexeexpress.vexeexpressserver.APP.ADMIN.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

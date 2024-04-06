@@ -1,6 +1,6 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.repository;
+package com.vexeexpress.vexeexpressserver.APP.ADMIN.repository;
 
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.Account;
+import com.vexeexpress.vexeexpressserver.entity.Account;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface AccountRepository extends MongoRepository<Account, String> {

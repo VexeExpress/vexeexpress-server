@@ -1,6 +1,6 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.repository;
+package com.vexeexpress.vexeexpressserver.APP.BMS.repository;
 
-import com.vexeexpress.vexeexpressserver.ADMIN.entity.BmsUser;
+import com.vexeexpress.vexeexpressserver.entity.BmsUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BmsUserRepository extends MongoRepository<BmsUser, String> {

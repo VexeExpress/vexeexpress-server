@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.ADMIN.config;
+package com.vexeexpress.vexeexpressserver.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
