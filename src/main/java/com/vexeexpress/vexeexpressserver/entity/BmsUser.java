@@ -2,6 +2,7 @@ package com.vexeexpress.vexeexpressserver.entity;
 
 import jakarta.persistence.TemporalType;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.Temporal;
@@ -15,12 +16,16 @@ import java.util.Date;
 public class BmsUser {
     @Id
     private String id;
-
-    private String ownerName;
-    private String phoneNumber;
+    private String name;
+    private String phone;
+    private String gender;
+    private String email;
+    private Date birth;
+    private String role;
     private String username;
     private String password;
-    private String address;
-    private Boolean activateAccount;
-    private Date createdDate;
+    private String companyId;
+    private Date dateInnitiated;
+    private Boolean status;
+
 }
