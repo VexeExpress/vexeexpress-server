@@ -1,8 +1,12 @@
 package com.vexeexpress.vexeexpressserver.APP.ADMIN.repository;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
-import org.springframework.data.mongodb.repository.MongoRepository;
+@Repository
+public interface AdminBusCompanyRepository extends JpaRepository<BmsBusCompany, Long>{
+    Optional<BmsBusCompany> findByCompanyName(String companyName);  
 
-public interface AdminBusCompanyRepository extends MongoRepository<BmsBusCompany, String> {
-    BmsBusCompany findByCompanyName(String companyName);
-}
+} 
