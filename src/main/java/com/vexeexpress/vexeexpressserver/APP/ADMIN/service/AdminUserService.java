@@ -1,10 +1,10 @@
 package com.vexeexpress.vexeexpressserver.APP.ADMIN.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.vexeexpress.vexeexpressserver.APP.ADMIN.repository.AdminBusCompanyRepository;
@@ -66,6 +66,11 @@ public class AdminUserService {
         // Lưu tài khoản vào cơ sở dữ liệu
         adminUserRepository.save(bmsUser);
         return "Thêm tài khoản thành công";
+    }
+
+    // Truy xuất danh sách tài khoản thuộc công ty (companyId)
+    public List<BmsUser> getListUserByCompanyId(Long companyId) {
+        return adminUserRepository.findByCompanyId(companyId);
     }
 
 }
