@@ -1,6 +1,7 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +20,9 @@ public class BmsAuthController {
     @Autowired
     BmsAuthService bmsAuthService;
     @PostMapping("/login")
-    public String login(@RequestBody LoginForm loginForm) {
+    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
-        
         return bmsAuthService.login(username, password);
     }
     
