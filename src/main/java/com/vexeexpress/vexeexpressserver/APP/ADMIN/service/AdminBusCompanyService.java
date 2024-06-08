@@ -20,8 +20,7 @@ public class AdminBusCompanyService {
     public String addBusCompany(BmsBusCompany busCompany) {
         System.out.println(busCompany);
         // Kiểm tra sự tồn tại companyName trong cơ sở dữ liệu
-        Optional<BmsBusCompany> existingCompany = adminBusCompanyRepository
-                .findByCompanyName(busCompany.getCompanyName());
+        Optional<BmsBusCompany> existingCompany = adminBusCompanyRepository.findByCompanyName(busCompany.getCompanyName());
         if (existingCompany.isPresent()) {
             // companyName đã tồn tại, không thể thêm mới
             return "2";

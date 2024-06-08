@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class BmsAuthController {
     @Autowired
     BmsAuthService bmsAuthService;
+    
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
         String username = loginForm.getUsername();
