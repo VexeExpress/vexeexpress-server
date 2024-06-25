@@ -10,6 +10,7 @@ public class BmsOffice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
