@@ -27,4 +27,18 @@ public class BmsUserService {
     public BmsUser createUser(BmsUser bmsUser) {
         return null;
     }
+
+    public Long getCompanyIdByUserId(String userId) {
+        Long userIdLong;
+        try {
+            userIdLong = Long.parseLong(userId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid userId format: " + userId);
+        }
+
+        BmsUser user = userRepository.findById(userIdLong)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getCompanyId();
+    }
 }
