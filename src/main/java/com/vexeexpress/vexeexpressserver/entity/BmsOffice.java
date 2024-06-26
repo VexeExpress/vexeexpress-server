@@ -49,8 +49,4 @@ public class BmsOffice {
     @CreationTimestamp
     private LocalDate createdAt;
 
-    // Constructor mặc định cần thiết cho JPA
-    public BmsOffice() {
-      
-    }
 }
