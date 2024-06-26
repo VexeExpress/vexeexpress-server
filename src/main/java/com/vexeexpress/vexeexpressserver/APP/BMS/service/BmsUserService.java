@@ -22,8 +22,9 @@ public class BmsUserService {
             return null;
         }
     }
-    
 
-    
-    
+
+    public BmsUser createUser(BmsUser bmsUser) {
+        return null;
+    }
 }
