@@ -25,7 +25,7 @@ public class BmsUserService {
 
 
     public BmsUser createUser(BmsUser bmsUser) {
-        return null;
+        return userRepository.save(bmsUser);
     }
 
     public Long getCompanyIdByUserId(String userId) {
