@@ -1,31 +1,52 @@
 package com.vexeexpress.vexeexpressserver.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "bus_office")
+@Table(name = "bms_office")
 @Data
 public class BmsOffice {
+    // Định danh duy nhất cho mỗi văn phòng
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    // Tên của văn phòng
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "phone", length = 15)
+    // Số điện thoại của văn phòng
+    @Column(name = "phone", length = 20, nullable = false)
     private String phone;
 
-    @Column(name = "code", nullable = false, length = 50)
+    // Mã của văn phòng
+    @Column(name = "code", length = 20, nullable = false)
     private String code;
 
-    @Column(name = "address", length = 255)
+    // Địa chỉ của văn phòng
+    @Column(name = "address", length = 255, nullable = false)
     private String address;
 
-    @Column(name = "note")
+    // Ghi chú về văn phòng
+    @Column(name = "note", length = 255)
     private String note;
 
-    @Column(name = "company_id", nullable = false, length = 50)
-    private String companyId;
+    // ID của công ty sở hữu văn phòng
+    @Column(name = "company_id", nullable = false)
+    private Long companyId;
+
+    // Ngày tạo bản ghi văn phòng
+    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    private LocalDate createdAt;
+
 }
