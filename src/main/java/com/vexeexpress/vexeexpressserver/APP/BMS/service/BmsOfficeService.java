@@ -18,7 +18,7 @@ public class BmsOfficeService {
         return bmsOfficeRepository.save(bmsOffice);
     }
     
-    public List<BmsOffice> getOfficesByCompanyId(Long companyId) {
+    public List<BmsOffice> getOfficesByCompanyId(String companyId) {
         return bmsOfficeRepository.findByCompanyId(companyId);
     }
     

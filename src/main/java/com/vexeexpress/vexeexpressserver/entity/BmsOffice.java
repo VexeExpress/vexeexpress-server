@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 
@@ -42,11 +41,5 @@ public class BmsOffice {
 
     // ID của công ty sở hữu văn phòng
     @Column(name = "company_id", nullable = false)
-    private Long companyId;
-
-    // Ngày tạo bản ghi văn phòng
-    @Column(name = "created_at", nullable = false)
-    @CreationTimestamp
-    private LocalDate createdAt;
-
+    private String companyId;
 }

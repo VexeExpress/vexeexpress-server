@@ -22,7 +22,7 @@ public class BmsOfficeController {
     // Hiện danh sách văn phòng dựa theo companyId
     @GetMapping("/offices/{companyId}")
     public List<BmsOffice> getOfficesByCompanyId(@PathVariable String companyId) {
-        return bmsOfficeService.getOfficesByCompanyId(Long.valueOf(companyId));
+        return bmsOfficeService.getOfficesByCompanyId(companyId);
     }
 
 

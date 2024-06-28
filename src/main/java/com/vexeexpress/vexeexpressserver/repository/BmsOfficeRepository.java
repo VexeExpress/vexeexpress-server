@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BmsOfficeRepository extends JpaRepository<BmsOffice, Long> {
-     List<BmsOffice> findByCompanyId(Long companyId);
+public interface BmsOfficeRepository extends JpaRepository<BmsOffice, String> {
+     List<BmsOffice> findByCompanyId(String companyId);
 }
