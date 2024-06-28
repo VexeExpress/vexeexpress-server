@@ -12,7 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "bms_office")
+@Table(name = "bus_office")
 @Data
 public class BmsOffice {
     // Định danh duy nhất cho mỗi văn phòng
