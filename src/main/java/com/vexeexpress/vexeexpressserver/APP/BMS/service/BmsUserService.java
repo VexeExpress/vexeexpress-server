@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,17 @@ public class BmsUserService {
 
     public BmsUser createUser(BmsUser bmsUser) {
         return userRepository.save(bmsUser);
+    }
+
+    public List<BmsUser> getUsersByCompanyId(Long companyId) {
+        return userRepository.findByCompanyId(companyId);
+    }
+
+    public void deleteUser(Long id) throws Exception {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new Exception("User not found");
+        }
     }
 }
