@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,7 +37,7 @@ public class BmsUser {
     private String status;
 
     @Column(name = "birth")
-    private LocalDate birth;
+    private Date birth;
 
     @Column(name = "gender", length = 6, nullable = false)
     private String gender;

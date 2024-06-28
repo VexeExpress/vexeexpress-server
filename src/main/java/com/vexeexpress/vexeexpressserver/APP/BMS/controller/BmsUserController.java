@@ -3,11 +3,7 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.BmsUserService;
 import com.vexeexpress.vexeexpressserver.entity.BmsUser;
@@ -33,6 +29,11 @@ public class BmsUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Lỗi khi truy vấn thông tin người dùng");
         }
+    }
+    @PostMapping("/create-user")
+    public BmsUser createUser(@RequestBody BmsUser bmsUser) {
+        System.out.println(bmsUser);
+        return bmsUserService.createUser(bmsUser);
     }
 
 }
