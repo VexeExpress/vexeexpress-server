@@ -32,6 +32,7 @@ public class BmsUserController {
                     .body("Lỗi khi truy vấn thông tin người dùng");
         }
     }
+    // Tạo nhân viên mới
     @PostMapping("/create-user")
     public BmsUser createUser(@RequestBody BmsUser bmsUser) {
         System.out.println(bmsUser);
