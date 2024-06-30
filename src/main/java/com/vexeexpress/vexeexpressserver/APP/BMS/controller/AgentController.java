@@ -33,6 +33,7 @@ public class AgentController {
         System.out.println(id);
         try {
 
+
             agentService.deleteAgent(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
