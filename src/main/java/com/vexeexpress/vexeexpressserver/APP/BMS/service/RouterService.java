@@ -6,16 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class RouterService {
     @Autowired
     RouterRepository routerRepository;
+
     public BmsRouter createRouter(BmsRouter bmsRouter) {
         return routerRepository.save(bmsRouter);
     }
 
     public List<BmsRouter> getRouterByCompanyId(Long companyId) {
         return routerRepository.findByCompanyId(String.valueOf(companyId));
+    }
+
+    public void deleteRouteById(Long routeId) {
+        if (!routerRepository.existsById(routeId)) {
+            throw new NoSuchElementException("Route not found");
+        }
+        routerRepository.deleteById(routeId);
     }
 }
