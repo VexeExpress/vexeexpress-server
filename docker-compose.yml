@@ -1,25 +1,5 @@
-version: '3.8'
-
 services:
-  postgres:
-    image: postgres
-    container_name: postgres
+  server-container:
+    image: vexeexpress-server-image
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: CVbn12345
-      POSTGRES_USER: postgres
-      POSTGRES_DB: VexeExpress
-
-  springbootapp:
-    build: .
-    container_name: springbootapp
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/VexeExpress
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: CVbn12345
-    platform: linux/amd64
+      - '8080:8080'
