@@ -36,4 +36,11 @@ public class RouterController {
             routerService.deleteRouteById(routeId);
             return ResponseEntity.ok().build();
     }
+
+    // Cập nhật tuyến đường
+    @PutMapping("/update-route/{routeId}")
+    public ResponseEntity<BmsRouter> updateRoute(@PathVariable Long routeId, @RequestBody BmsRouter bmsRouter) {
+            BmsRouter updatedRouter = routerService.updateRouter(routeId, bmsRouter);
+            return ResponseEntity.ok(updatedRouter);
+    }
 }

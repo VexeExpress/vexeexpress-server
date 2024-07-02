@@ -27,4 +27,14 @@ public class RouterService {
         }
         routerRepository.deleteById(routeId);
     }
+
+    public BmsRouter updateRouter(Long routeId, BmsRouter bmsRouter) {
+        BmsRouter existingRouter = routerRepository.findById(routeId).orElseThrow(NoSuchElementException::new);
+        existingRouter.setName(bmsRouter.getName());
+        existingRouter.setShortName(bmsRouter.getShortName());
+        existingRouter.setPrice(bmsRouter.getPrice());
+        existingRouter.setNote(bmsRouter.getNote());
+        // Set other fields as necessary
+        return routerRepository.save(existingRouter);
+    }
 }
