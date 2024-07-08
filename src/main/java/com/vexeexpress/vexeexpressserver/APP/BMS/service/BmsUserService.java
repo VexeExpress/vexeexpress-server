@@ -40,4 +40,21 @@ public class BmsUserService {
             throw new Exception("User not found");
         }
     }
+
+    public BmsUser updateUser(Long id, BmsUser updatedUser) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setUsername(updatedUser.getUsername());
+                    user.setPassword(updatedUser.getPassword());
+                    user.setName(updatedUser.getName());
+                    user.setPhone(updatedUser.getPhone());
+                    user.setBirth(updatedUser.getBirth());  
+                    user.setRole(updatedUser.getRole());
+                    user.setGender(updatedUser.getGender());
+                    user.setEmail(updatedUser.getEmail());
+                    user.setStatus(updatedUser.getStatus());
+                    return userRepository.save(user);
+                })
+                .orElse(null);
+    }
 }
