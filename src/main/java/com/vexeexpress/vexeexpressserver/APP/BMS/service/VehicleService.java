@@ -18,4 +18,28 @@ public class VehicleService {
     public List<BmsVehicle> getVehiclesByCompanyId(Long companyId) {
         return vehicleRepository.findByCompanyId(String.valueOf(companyId));
     }
+     // Cập nhật thông tin phương tiện theo id
+     public BmsVehicle updateVehicle(Long id, BmsVehicle updatedVehicle) {
+        BmsVehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with id: " + id));
+
+        vehicle.setLicensePlate(updatedVehicle.getLicensePlate());
+        vehicle.setPhone(updatedVehicle.getPhone());
+        vehicle.setBrand(updatedVehicle.getBrand());
+        vehicle.setCategory(updatedVehicle.getCategory());
+        vehicle.setColor(updatedVehicle.getColor());
+        vehicle.setNote(updatedVehicle.getNote());
+
+        return vehicleRepository.save(vehicle);
+    }
+
+    // Xóa phương tiện
+    public String deleteVehicle(Long id) {
+        if (vehicleRepository.existsById(id)) {
+            vehicleRepository.deleteById(id);
+            return "Vehicle with id " + id + " has been deleted.";
+        } else {
+            throw new IllegalArgumentException("Vehicle not found with id: " + id);
+        }
+    }
 }
