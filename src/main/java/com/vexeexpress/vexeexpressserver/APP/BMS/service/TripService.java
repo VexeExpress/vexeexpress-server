@@ -21,4 +21,18 @@ public class TripService {
         return null;
 
     }
+
+
+
+    public List<BmsTrip> searchTrips(String valueRouter, String valueDayDeparture, String companyId) {
+        System.out.println("Received request: valueRouter=" + valueRouter + ", valueDayDeparture=" + valueDayDeparture + ", companyId=" + companyId);
+        List<BmsTrip> listTrip = tripRepository.findByCompanyId(companyId);
+        System.out.println("Found trips: " + listTrip);
+
+        return null;
+    }
+
+    public List<BmsTrip> getAllTrips() {
+        return tripRepository.findAll();
+    }
 }

@@ -1,12 +1,15 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TripService;
+import com.vexeexpress.vexeexpressserver.APP.BMS.utils.SearchRequest;
 import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -21,14 +24,19 @@ public class TripController {
         System.out.println(bmsTrip);
         return tripService.createTrip(bmsTrip);
     }
+
     @GetMapping("/search")
-    public ResponseEntity<List<BmsTrip>> searchTrips() {
-        try {
-//            List<BmsTrip> trips = tripService.findTripsByDateAndRoute(date, route);
-//            return new ResponseEntity<>(trips, HttpStatus.OK);
-            return null;
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public List<BmsTrip> searchTrips(
+            @RequestParam("valueRouter") String valueRouter,
+            @RequestParam("valueDayDeparture") String valueDayDeparture,
+            @RequestParam("companyId") String companyId
+    ) {
+
+        return tripService.searchTrips(valueRouter, valueDayDeparture, companyId);
+    }
+
+    @GetMapping("/get-all-trips")
+    public List<BmsTrip> getAllTrips() {
+        return tripService.getAllTrips();
     }
 }
