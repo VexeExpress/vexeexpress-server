@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 @Repository
 public interface TripRepository extends JpaRepository<BmsTrip, String> {
-    List<BmsTrip> findByValueRouter(String companyId);
+    List<BmsTrip> findByValueRouter(String valueRouter);
 
     List<BmsTrip> findByCompanyId(String companyId);
 }
