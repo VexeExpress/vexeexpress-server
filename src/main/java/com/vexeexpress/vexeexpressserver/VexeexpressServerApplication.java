@@ -25,7 +25,7 @@ public class VexeexpressServerApplication {
         @SuppressWarnings("null")
         @Override
         public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/api/**").allowedOrigins("http://localhost:5173").allowedMethods("GET", "POST", "PUT",
+            registry.addMapping("/api/**").allowedOrigins("http://localhost:3000").allowedMethods("GET", "POST", "PUT",
                     "DELETE");
         }
     }
