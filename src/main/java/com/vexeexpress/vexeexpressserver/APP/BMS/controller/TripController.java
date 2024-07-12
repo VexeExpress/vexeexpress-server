@@ -1,16 +1,12 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TripService;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.SearchRequest;
 import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/bms/trip")
@@ -38,5 +34,10 @@ public class TripController {
     @GetMapping("/get-all-trips")
     public List<BmsTrip> getAllTrips() {
         return tripService.getAllTrips();
+    }
+
+    @GetMapping("/get-info-trip/{id}")
+    public Optional<BmsTrip> getInfoTip(@PathVariable Long id){
+        return tripService.getInfoTrip(id);
     }
 }
