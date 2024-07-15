@@ -33,6 +33,13 @@ public class BmsUserService {
         return userRepository.findByCompanyId(companyId);
     }
 
+    public List<BmsUser> getEmployeesByCompanyId(Long companyId) {
+        return userRepository.findByCompanyIdAndRole(companyId, "2");
+    }
+    
+    public List<BmsUser> getDriversByCompanyId(Long companyId) {
+        return userRepository.findByCompanyIdAndRole(companyId, "3");
+    }
     public void deleteUser(Long id) throws Exception {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

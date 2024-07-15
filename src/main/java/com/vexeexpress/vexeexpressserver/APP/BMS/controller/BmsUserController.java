@@ -14,39 +14,55 @@ import java.util.List;
 @RequestMapping("/bms/user")
 @CrossOrigin(origins = "http://localhost:5173")
 public class BmsUserController {
+
     @Autowired
     BmsUserService bmsUserService;
 
-    @GetMapping("/get-name-user/{id}")
-    public ResponseEntity<?> getNameUser(@PathVariable Long id) {
+    // Fetch all users by companyId
+    @GetMapping("/get-users/{companyId}")
+    public List<BmsUser> getUsersByCompanyId(@PathVariable Long companyId){
+        return bmsUserService.getUsersByCompanyId(companyId);
+    }
+
+    // Fetch employees by companyId
+    @GetMapping("/get-employees/{companyId}")
+    public List<BmsUser> getEmployeesByCompanyId(@PathVariable Long companyId){
+        return bmsUserService.getEmployeesByCompanyId(companyId);
+    }
+
+    // Fetch drivers by companyId
+    @GetMapping("/get-drivers/{companyId}")
+    public List<BmsUser> getDriversByCompanyId(@PathVariable Long companyId){
+        return bmsUserService.getDriversByCompanyId(companyId);
+    }
+
+    // Other endpoints for your controller (create, update, delete, etc.)...
+    
+    // Example: Create user
+    @PostMapping("/create-user")
+    public BmsUser createUser(@RequestBody BmsUser bmsUser) {
+        return bmsUserService.createUser(bmsUser);
+    }
+
+    // Example: Update user
+    @PostMapping("/update-user/{id}")
+    public ResponseEntity<BmsUser> updateUser(@PathVariable Long id, @RequestBody BmsUser updatedUser) {
         try {
-            String name = bmsUserService.getNameUserById(id);
-            if (name != null) {
-                return ResponseEntity.ok(name);
+            BmsUser user = bmsUserService.updateUser(id, updatedUser);
+            if (user != null) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
             } else {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Lỗi khi truy vấn thông tin người dùng");
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    // Tạo nhân viên mới
-    @PostMapping("/create-user")
-    public BmsUser createUser(@RequestBody BmsUser bmsUser) {
-        System.out.println(bmsUser);
-        return bmsUserService.createUser(bmsUser);
-    }
-    // Hiển thị danh sách nhân viên
-    @GetMapping("/get-users/{companyId}")
-    public List<BmsUser> getUsersByCompanyId(@PathVariable Long companyId){
-        return bmsUserService.getUsersByCompanyId(companyId);
-    }
-    // Xoá nhân viên
+
+    // Example: Delete user
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        System.out.println(id);
         try {
             bmsUserService.deleteUser(id);
             return ResponseEntity.noContent().build();
@@ -54,20 +70,4 @@ public class BmsUserController {
             return ResponseEntity.notFound().build();
         }
     }
-
-      // Cập nhật thông tin nhân viên
-      @PostMapping("/update-user/{id}")
-      public ResponseEntity<BmsUser> updateUser(@PathVariable Long id, @RequestBody BmsUser updatedUser) {
-          try {
-              BmsUser user = bmsUserService.updateUser(id, updatedUser);
-              if (user != null) {
-                  return new ResponseEntity<>(user, HttpStatus.OK);
-              } else {
-                  return ResponseEntity.notFound().build();
-              }
-          } catch (Exception e) {
-              e.printStackTrace();
-              return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-          }
-      }
 }

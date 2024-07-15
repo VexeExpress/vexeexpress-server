@@ -13,5 +13,6 @@ public interface UserRepository extends JpaRepository<BmsUser, Long>{
     BmsUser findByUsername(String username);
     Optional<BmsUser> findById(Long id);
     List<BmsUser> findByCompanyId(Long companyId);
-    
+    List<BmsUser> findByCompanyIdAndRole(Long companyId, String role);
+
 }
