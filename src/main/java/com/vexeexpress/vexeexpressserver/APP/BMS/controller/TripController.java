@@ -1,12 +1,13 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TripService;
+import com.vexeexpress.vexeexpressserver.APP.BMS.utils.ValueTrip;
 import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/bms/trip")
@@ -37,7 +38,8 @@ public class TripController {
     }
 
     @GetMapping("/get-info-trip/{id}")
-    public Optional<BmsTrip> getInfoTip(@PathVariable Long id){
-        return tripService.getInfoTrip(id);
+    public ResponseEntity<ValueTrip> getInfoTrip(@PathVariable Long id){
+
+        return tripService.getInfoTrip(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -37,5 +37,8 @@ public class BmsTrip {
     private String valueNote;
 
     @Column(name = "valueDriver")
-    private List<Integer> valueDriver;
+    private List<String> valueDriver;
+
+
+
 }
