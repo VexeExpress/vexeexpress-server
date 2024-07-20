@@ -32,6 +32,11 @@ public class BmsUserController {
                     .body("Lỗi khi truy vấn thông tin người dùng");
         }
     }
+    // Dựa theo userId ể trả về companyId
+    @GetMapping("/getCompanyIdByUserId/{userId}")
+    public Long getCompanyIdByUserId(@PathVariable Long userId) {
+        return bmsUserService.getCompanyIdByUserId(userId);
+    }
     // Tạo nhân viên mới
     @PostMapping("/create-user")
     public BmsUser createUser(@RequestBody BmsUser bmsUser) {

@@ -3,7 +3,7 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.vexeexpress.vexeexpressserver.config.SecurityConfig;
+import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,8 @@ public class BmsUserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    CompanyRepository companyRepository;
 
     public String getNameUserById(Long id) {
         Optional<BmsUser> optionalUser = userRepository.findById(id);
@@ -24,6 +26,16 @@ public class BmsUserService {
             BmsUser user = optionalUser.get();
             return user.getName();
         } else {
+            return null;
+        }
+    }
+    public Long getCompanyIdByUserId(Long userId) {
+        Optional<BmsUser> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            BmsUser user = userOptional.get();
+            return user.getCompanyId();
+        } else {
+            System.out.println("User not found");
             return null;
         }
     }
@@ -46,4 +58,6 @@ public class BmsUserService {
             throw new Exception("User not found");
         }
     }
+
+
 }
