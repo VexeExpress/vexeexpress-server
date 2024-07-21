@@ -18,6 +18,9 @@ public class BmsGoods {
     @Column(name = "tripId")
     private Long tripId;
 
+    @Column(name = "userId")
+    private Long userId;
+    
     /// Số điện thoại người gửi
     @Column(name = "senderPhone")
     private String senderPhone;
