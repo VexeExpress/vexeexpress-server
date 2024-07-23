@@ -98,7 +98,7 @@ public class TripService {
         });
 
         // Fetch the drivers using valueDriver
-        List<String> driverIds = trip.getValueDriver();
+        List<Integer> driverIds = trip.getValueDriver();
         if (driverIds != null && !driverIds.isEmpty()) {
             List<Long> driverIdsLong = driverIds.stream().map(Long::valueOf).collect(Collectors.toList());
             List<BmsUser> drivers = userRepository.findAllById(driverIdsLong);
