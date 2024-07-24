@@ -1,5 +1,7 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.libs.ErrorMessage;
+import com.vexeexpress.vexeexpressserver.APP.BMS.utils.JwtUtils;
 import com.vexeexpress.vexeexpressserver.entity.BmsAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.vexeexpress.vexeexpressserver.entity.BmsUser;
 import com.vexeexpress.vexeexpressserver.repository.UserRepository;
+
+import static com.vexeexpress.vexeexpressserver.APP.BMS.utils.JwtUtils.CheckValidLoginToken;
 
 @Service
 public class BmsAuthService {
@@ -16,6 +20,7 @@ public class BmsAuthService {
     PasswordEncoder passwordEncoder;
 
     public ResponseEntity<?> login(String username, String password) {
+
         // Kiểm tra username và password trống
         if (username == null || username.isEmpty()) {
             return ResponseEntity.badRequest().body("Vui lòng nhập tài khoản"); // Lỗi tên người dùng trống
@@ -53,6 +58,4 @@ public class BmsAuthService {
             }
         }
     }
-
-
 }
