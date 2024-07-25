@@ -20,6 +20,7 @@ public class BmsAuthService {
     PasswordEncoder passwordEncoder;
 
     public ResponseEntity<?> login(String username, String password) {
+
         // Kiểm tra username và password trống
         if (username == null || username.isEmpty()) {
             return ResponseEntity.badRequest().body("Vui lòng nhập tài khoản"); // Lỗi tên người dùng trống

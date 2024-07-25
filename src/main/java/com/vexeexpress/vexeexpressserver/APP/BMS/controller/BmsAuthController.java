@@ -28,6 +28,7 @@ public class BmsAuthController {
     
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+        System.out.println(loginForm);
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
         return bmsAuthService.login(username, password);
