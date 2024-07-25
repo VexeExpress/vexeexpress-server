@@ -8,51 +8,54 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChargeCostService {
     @Autowired
-    ChargeCostRepository chargeCostRepository;
+    ChargeCostRepository repository;
 
-    public BmsChargeCost add(BmsChargeCost bmsChargeCost) {
-        return chargeCostRepository.save(bmsChargeCost);
+    public BmsChargeCost add(BmsChargeCost input) {
+        return repository.save(input);
     }
 
-    public BmsChargeCost update(BmsChargeCost bmsChargeCost) {
-        BmsChargeCost existingCost = chargeCostRepository.findByTripId(bmsChargeCost.getTripId());
+    public BmsChargeCost update(BmsChargeCost input) {
+        BmsChargeCost existingInput = repository.findByTripId(input.getTripId());
 
-        // Cập nhật các thuộc tính từ bmsChargeCost không null
-        if (bmsChargeCost.getId() != null) {
-            existingCost.setId(bmsChargeCost.getId());
+        // Cập nhật các thuộc tính từ input không null
+        if (input.getId() != null) {
+            existingInput.setId(input.getId());
         }
-        if (bmsChargeCost.getStation() != null) {
-            existingCost.setStation(bmsChargeCost.getStation());
+        if (input.getStation() != null) {
+            existingInput.setStation(input.getStation());
         }
-        if (bmsChargeCost.getStationMeal() != null) {
-            existingCost.setStationMeal(bmsChargeCost.getStationMeal());
+        if (input.getStationMeal() != null) {
+            existingInput.setStationMeal(input.getStationMeal());
         }
-        if (bmsChargeCost.getDailyEat() != null) {
-            existingCost.setDailyEat(bmsChargeCost.getStationMeal());
+        if (input.getDailyEat() != null) {
+            existingInput.setDailyEat(input.getStationMeal());
         }
-        if (bmsChargeCost.getWashing() != null) {
-            existingCost.setWashing(bmsChargeCost.getWashing());
+        if (input.getWashing() != null) {
+            existingInput.setWashing(input.getWashing());
         }
-        if (bmsChargeCost.getRepair() != null) {
-            existingCost.setRepair(bmsChargeCost.getRepair());
+        if (input.getRepair() != null) {
+            existingInput.setRepair(input.getRepair());
         }
-        if (bmsChargeCost.getDriverSalary() != null) {
-            existingCost.setDriverSalary(bmsChargeCost.getDriverSalary());
+        if (input.getDriverSalary() != null) {
+            existingInput.setDriverSalary(input.getDriverSalary());
         }
-        if (bmsChargeCost.getAssistantSalary() != null) {
-            existingCost.setAssistantSalary(bmsChargeCost.getAssistantSalary());
+        if (input.getAssistantSalary() != null) {
+            existingInput.setAssistantSalary(input.getAssistantSalary());
         }
-        if (bmsChargeCost.getFreightCollected() != null) {
-            existingCost.setFreightCollected(bmsChargeCost.getFreightCollected());
+        if (input.getFreightCollected() != null) {
+            existingInput.setFreightCollected(input.getFreightCollected());
         }
-        if (bmsChargeCost.getGas() != null) {
-            existingCost.setGas(bmsChargeCost.getGas());
+        if (input.getGas() != null) {
+            existingInput.setGas(input.getGas());
+        }
+        if (input.getBusStation() != null) {
+            existingInput.setBusStation(input.getBusStation());
         }
 
-        return chargeCostRepository.save(existingCost);
+        return repository.save(existingInput);
     }
 
     public BmsChargeCost findByTripId(Long id) {
-        return chargeCostRepository.findByTripId(id);
+        return repository.findByTripId(id);
     }
 }

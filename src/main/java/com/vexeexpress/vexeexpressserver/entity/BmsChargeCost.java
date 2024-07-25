@@ -40,4 +40,10 @@ public class BmsChargeCost {
 
     @Column(name = "gas")
     private Double gas;
+
+    @Column(name = "bus_station")
+    private Double busStation;
+
+    @Column(name = "agent")
+    private Double agent;
 }
