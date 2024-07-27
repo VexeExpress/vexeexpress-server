@@ -87,13 +87,13 @@ public class TripService {
         dto.setValueChairDiagram(trip.getValueChairDiagram());
 
         // Fetch the vehicle using valueVehicle
-        vehicleRepository.findById(trip.getValueVehicle()).ifPresent(vehicle -> {
+        vehicleRepository.findById(Long.valueOf(trip.getValueVehicle())).ifPresent(vehicle -> {
             dto.setValueVehicle(vehicle.getLicensePlate());
             dto.setPhoneVehicle(vehicle.getPhone());
         });
 
         // Fetch the router using valueRouter
-        routerRepository.findById(trip.getValueRouter()).ifPresent(router -> {
+        routerRepository.findById(Long.valueOf(trip.getValueRouter())).ifPresent(router -> {
             dto.setValueRouter(router.getName());
         });
 

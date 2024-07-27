@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RouterRepository extends JpaRepository<BmsRouter, String> {
+public interface RouterRepository extends JpaRepository<BmsRouter, Long> {
 
     List<BmsRouter> findByCompanyId(String companyId);
 }
