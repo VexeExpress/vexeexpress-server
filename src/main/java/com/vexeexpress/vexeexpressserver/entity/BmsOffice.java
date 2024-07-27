@@ -11,7 +11,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "bus_office")
+@Table(name = "bms_office")
 @Data
 public class BmsOffice {
     // Định danh duy nhất cho mỗi văn phòng

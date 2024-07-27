@@ -59,5 +59,20 @@ public class BmsUserController {
             return ResponseEntity.notFound().build();
         }
     }
+    // Example: Update user
+    @PostMapping("/update-user/{id}")
+    public ResponseEntity<BmsUser> updateUser(@PathVariable Long id, @RequestBody BmsUser updatedUser) {
+        try {
+            BmsUser user = bmsUserService.updateUser(id, updatedUser);
+            if (user != null) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VehicleRepository extends JpaRepository<BmsVehicle, String> {
+public interface VehicleRepository extends JpaRepository<BmsVehicle, Long> {
     List<BmsVehicle> findByCompanyId(String companyId);
 }
