@@ -18,6 +18,22 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+    public void updateTicket(BmsTicket ticket) {
+        ticketRepository.save(ticket); // Save sẽ cập nhật nếu vé đã tồn tại
+    }
+    public boolean cancelTicket(String seatNumber, String tripId) {
+        BmsTicket ticket = ticketRepository.findBySeatNumberAndTripId(seatNumber, tripId);
+        if (ticket != null) {
+            ticketRepository.delete(ticket);
+            return true;
+        }
+        return false;
+    }
+    
+    public BmsTicket findTicketBySeatNumberAndTripId(String seatNumber, String tripId) {
+        return ticketRepository.findBySeatNumberAndTripId(seatNumber, tripId);
+    }
+
     public List<BmsTicket> findTicketsByTripId(String tripId) {
         return ticketRepository.findByTripId(tripId);
     }

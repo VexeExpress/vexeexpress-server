@@ -11,4 +11,5 @@ import com.vexeexpress.vexeexpressserver.entity.BmsTicket;
 @Repository
 public interface BmsTicketRepository extends JpaRepository<BmsTicket, Long> {
     List<BmsTicket> findByTripId(String tripId);
+    BmsTicket findBySeatNumberAndTripId(String seatNumber, String tripId);
 }

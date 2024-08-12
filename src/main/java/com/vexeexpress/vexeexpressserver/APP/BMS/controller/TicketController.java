@@ -4,10 +4,13 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,6 +42,35 @@ public class TicketController {
         );
         ticketService.createTicket(ticket);
         return ResponseEntity.ok("Ticket created successfully");
+    }
+
+    @PutMapping("/update-ticket")
+    public ResponseEntity<String> updateTicket(@RequestBody TicketRequest ticketRequest) {
+        BmsTicket existingTicket = ticketService.findTicketBySeatNumberAndTripId(
+            ticketRequest.getSeatNumber(), ticketRequest.getTripId()
+        ); 
+        if (existingTicket != null) {
+            existingTicket.setPhone(ticketRequest.getPhone());
+            existingTicket.setName(ticketRequest.getName());
+            existingTicket.setBoardingPoint(ticketRequest.getBoardingPoint());
+            existingTicket.setDropOffPoint(ticketRequest.getDropOffPoint());
+            existingTicket.setNotes(ticketRequest.getNotes());
+            existingTicket.setPrice(ticketRequest.getPrice());
+            ticketService.updateTicket(existingTicket);
+            return ResponseEntity.ok("Ticket updated successfully");
+        } else {
+            return ResponseEntity.status(404).body("Ticket not found");
+        }
+    }
+
+    @DeleteMapping("/cancel-ticket")
+    public ResponseEntity<String> cancelTicket(@RequestParam String seatNumber, @RequestParam String tripId) {
+        boolean isCancelled = ticketService.cancelTicket(seatNumber, tripId);
+        if (isCancelled) {
+            return ResponseEntity.ok("Ticket canceled successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ticket not found");
+        }
     }
 
     @GetMapping("/get-seats")
