@@ -29,6 +29,9 @@ public class BmsAgent {
     @Column(name = "discount")
     private Double discount;
 
+    @Column(name = "note")
+    private String note;
+
     @Column(name = "company_id", nullable = false)
     private String companyId;
 
