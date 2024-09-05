@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BmsOfficeRepository extends JpaRepository<BmsOffice, Long> {
-     List<BmsOffice> findByCompanyId(String companyId);
-
-    Optional<Object> findByName(String name);
+//     List<BmsOffice> findByCompanyId(String companyId);
+//
+//    Optional<Object> findByName(String name);
 }

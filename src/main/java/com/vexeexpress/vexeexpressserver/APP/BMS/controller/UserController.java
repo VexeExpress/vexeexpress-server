@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.service.BmsUserService;
+import com.vexeexpress.vexeexpressserver.APP.BMS.service.UserService;
 import com.vexeexpress.vexeexpressserver.entity.BmsUser;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/bms/user")
 @CrossOrigin(origins = "http://localhost:5173")
-public class BmsUserController {
+public class UserController {
     @Autowired
-    BmsUserService bmsUserService;
+    UserService bmsUserService;
 
     @GetMapping("/get-name-user/{id}")
     public ResponseEntity<?> getNameUser(@PathVariable Long id) {
@@ -34,9 +34,17 @@ public class BmsUserController {
     }
     // Dựa theo userId ể trả về companyId
     @GetMapping("/getCompanyIdByUserId/{userId}")
-    public Long getCompanyIdByUserId(@PathVariable Long userId) {
-        return bmsUserService.getCompanyIdByUserId(userId);
+    public ResponseEntity<Long> getCompanyIdByUserId(@PathVariable Long userId) {
+        if (userId == null) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request nếu userId không hợp lệ
+        }
+        Long companyId = bmsUserService.getCompanyIdByUserId(userId);
+        if (companyId == null) {
+            return ResponseEntity.notFound().build(); // 404 Not Found nếu không tìm thấy công ty
+        }
+        return ResponseEntity.ok(companyId); // 200 OK nếu tìm thấy công ty
     }
+
     // Tạo nhân viên mới
     @PostMapping("/create-user")
     public BmsUser createUser(@RequestBody BmsUser bmsUser) {

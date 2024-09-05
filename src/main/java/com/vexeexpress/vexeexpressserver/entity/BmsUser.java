@@ -1,15 +1,10 @@
 package com.vexeexpress.vexeexpressserver.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,17 +28,17 @@ public class BmsUser {
     @Column(name = "phone", length = 13, nullable = false)
     private String phone;
 
-    @Column(name = "status", length = 1, nullable = false)
-    private String status;
+    @Column(name = "status", nullable = false)
+    private Boolean status;
 
     @Column(name = "birth")
-    private Date birth;
+    private LocalDate birth;
 
-    @Column(name = "gender", length = 6, nullable = false)
-    private String gender;
+    @Column(name = "gender", nullable = false)
+    private Integer gender;
 
-    @Column(name = "role",  length = 1, nullable = false)
-    private String role;
+    @Column(name = "role", nullable = false)
+    private Integer role;
 
     @Column(name = "username", length = 50, nullable = false)
     private String username;
@@ -51,8 +46,9 @@ public class BmsUser {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "company_id", nullable = false)
-    private Long companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

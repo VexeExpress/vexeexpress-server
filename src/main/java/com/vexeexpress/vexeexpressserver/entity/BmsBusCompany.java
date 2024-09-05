@@ -17,7 +17,6 @@ import java.util.Date;
 @Table(name = "bus_company")
 @Data
 public class BmsBusCompany {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -33,9 +32,6 @@ public class BmsBusCompany {
 
     @Column(name = "status")
     private Boolean status;
-
-    @Column(name = "date_expiration")
-    private LocalDate dateExpiration;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

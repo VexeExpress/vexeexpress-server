@@ -12,7 +12,7 @@ import com.vexeexpress.vexeexpressserver.entity.BmsUser;
 import com.vexeexpress.vexeexpressserver.repository.UserRepository;
 
 @Service
-public class BmsUserService {
+public class UserService {
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -30,13 +30,14 @@ public class BmsUserService {
         }
     }
     public Long getCompanyIdByUserId(Long userId) {
+        if (userId == null) {
+            return null; // Trả về null nếu userId không hợp lệ
+        }
         Optional<BmsUser> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
-            BmsUser user = userOptional.get();
-            return user.getCompanyId();
+            return userOptional.get().getCompany().getId();
         } else {
-            System.out.println("User not found");
-            return null;
+            return null; // Trả về null nếu không tìm thấy người dùng
         }
     }
 

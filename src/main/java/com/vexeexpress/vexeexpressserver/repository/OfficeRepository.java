@@ -4,6 +4,12 @@ import com.vexeexpress.vexeexpressserver.entity.BmsOffice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface OfficeRepository extends JpaRepository<BmsOffice, Long> {
+    List<BmsOffice> findByCompanyId(Long companyId);
+
+
+    boolean existsByNameAndCompanyId(String name, Long companyId);
 }
