@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RouterRepository extends JpaRepository<BmsRouter, Long> {
 
-    List<BmsRouter> findByCompanyId(String companyId);
+    List<BmsRouter> findByCompanyId(Long companyId);
 }
