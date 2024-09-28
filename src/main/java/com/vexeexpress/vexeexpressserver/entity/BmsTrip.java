@@ -15,8 +15,9 @@ public class BmsTrip {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "company_id", nullable = false)
-    private String companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 
     @Column(name = "valueChairDiagram", nullable = false)
     private String valueChairDiagram;
@@ -27,18 +28,17 @@ public class BmsTrip {
     @Column(name = "valueTimeDeparture", nullable = false)
     private LocalTime valueTimeDeparture;
 
-    @Column(name = "valueVehicle")
-    private String valueVehicle;
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
+    private BmsVehicle vehicle;
 
-    @Column(name = "valueRouter", nullable = false)
-    private String valueRouter;
+    @ManyToOne
+    @JoinColumn(name = "router_id", referencedColumnName = "id", nullable = false)
+    private BmsRouter router;
 
     @Column(name = "valueNote")
     private String valueNote;
 
     @Column(name = "valueDriver")
     private List<Integer> valueDriver;
-
-
-
 }

@@ -1,10 +1,13 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
 import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +18,7 @@ import com.vexeexpress.vexeexpressserver.repository.UserRepository;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    CompanyRepository companyRepository;
+
 
     public String getNameUserById(Long id) {
         Optional<BmsUser> optionalUser = userRepository.findById(id);
@@ -43,9 +43,13 @@ public class UserService {
 
 
     public BmsUser createUser(BmsUser bmsUser) {
-        String encodedPassword = passwordEncoder.encode(bmsUser.getPassword());
-        bmsUser.setPassword(encodedPassword);
         return userRepository.save(bmsUser);
+    }
+    
+    // Hàm mã hóa mật khẩu (bạn có thể sử dụng các thư viện mã hóa như BCrypt)
+    private String hashPassword(String password) {
+        // Giả sử bạn sử dụng BCrypt
+        return new BCryptPasswordEncoder().encode(password);
     }
 
     public List<BmsUser> getUsersByCompanyId(Long companyId) {
@@ -77,4 +81,27 @@ public class UserService {
     }
 
 
+    public String getUserNameById(Long userId) {
+        // Tìm kiếm người dùng theo ID
+        BmsUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy người dùng với ID: " + userId));
+        // Trả về tên người dùng nếu tìm thấy
+        return user.getName();
+    }
+
+    public boolean usernameExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public List<BmsUser> getAllUsersByCompanyId(Long companyId) {
+        return userRepository.findAllByCompanyId(companyId);
+    }
+
+    public List<BmsUser> getEmployeesByCompanyId(Long companyId) {
+        return userRepository.findEmployeesByCompanyId(companyId);
+    }
+
+    public List<BmsUser> getDriversByCompanyId(Long companyId) {
+        return userRepository.findDriversByCompanyId(companyId);
+    }
 }

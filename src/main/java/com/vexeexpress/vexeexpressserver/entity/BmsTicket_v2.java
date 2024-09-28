@@ -51,6 +51,9 @@ public class BmsTicket_v2 {
     @Column(name = "ticket_code")
     private String ticketCode;
 
+    @Column(name = "ticket_status")
+    private Integer ticketStatus;
+
     @ManyToOne
     @JoinColumn(name = "agency_id", referencedColumnName = "id")
     private BmsAgent agency;

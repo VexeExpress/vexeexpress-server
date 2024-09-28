@@ -1,11 +1,14 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.VehicleDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.VehicleDTO_v2;
 import com.vexeexpress.vexeexpressserver.entity.BmsVehicle;
 import com.vexeexpress.vexeexpressserver.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -15,22 +18,20 @@ public class VehicleService {
         return vehicleRepository.save(bmsVehicle);
     }
 
-    public List<BmsVehicle> getVehiclesByCompanyId(Long companyId) {
-        return vehicleRepository.findByCompanyId(String.valueOf(companyId));
+    public List<VehicleDTO_v2> getVehiclesByCompanyId(Long companyId) {
+        return vehicleRepository.findByCompanyId(companyId).stream().map(vehicle -> {
+            VehicleDTO_v2 dto = new VehicleDTO_v2();
+            dto.setId(vehicle.getId());
+            dto.setLicensePlate(vehicle.getLicensePlate());
+            dto.setCompanyId(vehicle.getCompany().getId());
+            return dto;
+        }).collect(Collectors.toList());
     }
+
+
     // Cập nhật thông tin phương tiện theo id
-    public BmsVehicle updateVehicle(Long id, BmsVehicle updatedVehicle) {
-        BmsVehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with id: " + id));
-
-        vehicle.setLicensePlate(updatedVehicle.getLicensePlate());
-        vehicle.setPhone(updatedVehicle.getPhone());
-        vehicle.setBrand(updatedVehicle.getBrand());
-        vehicle.setCategory(updatedVehicle.getCategory());
-        vehicle.setColor(updatedVehicle.getColor());
-        vehicle.setNote(updatedVehicle.getNote());
-
-        return vehicleRepository.save(vehicle);
+    public BmsVehicle updateVehicle(BmsVehicle bmsVehicle) {
+        return vehicleRepository.save(bmsVehicle);
     }
 
     // Xóa phương tiện
@@ -41,5 +42,9 @@ public class VehicleService {
         } else {
             throw new IllegalArgumentException("Vehicle not found with id: " + id);
         }
+    }
+
+    public BmsVehicle getVehicleById(Long vehicleId) {
+        return vehicleRepository.findById(vehicleId).orElse(null);
     }
 }

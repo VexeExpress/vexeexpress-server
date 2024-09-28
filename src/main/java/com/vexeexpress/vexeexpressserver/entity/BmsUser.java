@@ -54,7 +54,5 @@ public class BmsUser {
     @CreationTimestamp
     private LocalDate createdAt;
 
-    public BmsUser(){
-        
-    }
+
 }

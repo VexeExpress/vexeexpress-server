@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AgentRepository extends JpaRepository<BmsAgent, String> {
-    List<BmsAgent> findByCompanyId(String companyId);
+public interface AgentRepository extends JpaRepository<BmsAgent, Long> {
+    List<BmsAgent> findByCompanyId(Long companyId);
 
     Optional<Object> findByName(String name);
 }
