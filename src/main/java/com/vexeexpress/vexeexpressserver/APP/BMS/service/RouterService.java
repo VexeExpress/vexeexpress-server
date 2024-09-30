@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,36 +19,42 @@ public class RouterService {
         return routerRepository.save(bmsRouter);
     }
 
+
     public List<RouterDTO> getRouterByCompanyId(Long companyId) {
+        // Lấy danh sách BmsRouter theo companyId
         List<BmsRouter> routers = routerRepository.findByCompanyId(companyId);
+
+        // Chuyển đổi từ BmsRouter sang RouterDTO và trả về kết quả
         return routers.stream()
-                .map(this::convertToDTO)
+                .map(router -> {
+                    RouterDTO dto = new RouterDTO();
+                    dto.setId(router.getId());
+                    dto.setRouteName(router.getRouteName());
+                    dto.setRouteNameShort(router.getRouteNameShort());
+                    dto.setDisplayPrice(router.getDisplayPrice());
+                    dto.setStatus(router.getStatus());
+                    dto.setNote(router.getNote());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
-    private RouterDTO convertToDTO(BmsRouter router) {
-        RouterDTO dto = new RouterDTO();
-        dto.setId(router.getId());
-        dto.setName(router.getName());
-        dto.setShortName(router.getShortName());
-        dto.setPrice(router.getPrice());
-        dto.setNote(router.getNote());
-        dto.setCompanyId(router.getCompany() != null ? router.getCompany().getId() : null); // Extract companyId
-        return dto;
-    }
-
-    public void deleteRouteById(Long routeId) {
-        if (!routerRepository.existsById(routeId)) {
-            throw new NoSuchElementException("Route not found");
+    public boolean deleteRouteById(Long routeId) {
+        Optional<BmsRouter> router = routerRepository.findById(routeId);
+        if (router.isPresent()) {
+            routerRepository.delete(router.get());
+            return true; // Xóa thành công
         }
-        routerRepository.deleteById(routeId);
+        return false; // Không tìm thấy tuyến đường
     }
 
-    public BmsRouter updateRouter(BmsRouter bmsRouter) {
-        return routerRepository.save(bmsRouter);
-    }
 
     public BmsRouter getRouterById(Long routeId) {
-        return routerRepository.findById(routeId).orElse(null);
+        Optional<BmsRouter> optionalRouter = routerRepository.findById(routeId);
+        return optionalRouter.orElse(null);
+    }
+
+    public BmsRouter updateRouter(BmsRouter updatedRouter) {
+        return routerRepository.save(updatedRouter);
     }
 }

@@ -50,6 +50,7 @@ public class BmsAuthService {
         // Kiểm tra mật khẩu
         if (passwordEncoder.matches(password, user.getPassword())) {
             // Đăng nhập thành công, trả về ID của người dùng
+            System.out.println("ID User Login: " + user.getId());
             return ResponseEntity.ok(user.getId());
 
         } else {

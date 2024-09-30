@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bms/office")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:3000")
 public class OfficeController {
     @Autowired
     OfficeService officeService;

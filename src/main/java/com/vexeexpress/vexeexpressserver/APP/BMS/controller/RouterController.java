@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/bms/router")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RouterController {
     @Autowired
     RouterService routerService;
@@ -23,23 +24,14 @@ public class RouterController {
 
     // Tạo tuyến đường mới
     @PostMapping("/create-router")
-    public ResponseEntity<BmsRouter> createRouter(@RequestBody RouterDTO routerDTO) {
+    public ResponseEntity<BmsRouter> createRouter(@RequestBody BmsRouter bmsRouter) {
         try {
-            System.out.println("Dữ liệu tuyến mới: " + routerDTO);
+            System.out.println("Dữ liệu tuyến mới: " + bmsRouter);
             // Fetch the company by companyId
-            BmsBusCompany company = companyService.getCompanyById(routerDTO.getCompanyId());
+            BmsBusCompany company = companyService.getCompanyById(bmsRouter.getCompany().getId());
             if (company == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 if company not found
             }
-
-            // Create a new BmsRouter and set the values from DTO
-            BmsRouter bmsRouter = new BmsRouter();
-            bmsRouter.setName(routerDTO.getName());
-            bmsRouter.setShortName(routerDTO.getShortName());
-            bmsRouter.setPrice(routerDTO.getPrice());
-            bmsRouter.setNote(routerDTO.getNote());
-            bmsRouter.setCompany(company); // Set the fetched company
-
             // Save the router
             BmsRouter createdRouter = routerService.createRouter(bmsRouter);
 
@@ -48,47 +40,61 @@ public class RouterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 500 Internal Server Error
         }
     }
-    // Hiện thị danh sách tuyến
     @GetMapping("/get-router/{companyId}")
-    public List<RouterDTO> getRouterByCompanyId(@PathVariable Long companyId) {
-        return routerService.getRouterByCompanyId(companyId);
-    }
-    // Xóa 1 tuyến đường
-    @DeleteMapping("/delete-route/{routeId}")
-    public ResponseEntity<?> deleteRoute(@PathVariable Long routeId) {
-        routerService.deleteRouteById(routeId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> getRouterByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<RouterDTO> routers = routerService.getRouterByCompanyId(companyId);
+            if (routers.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Không tìm thấy tuyến nào cho công ty ID: " + companyId);
+            }
+            return ResponseEntity.ok(routers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Đã xảy ra lỗi trong quá trình lấy danh sách tuyến. Vui lòng thử lại sau.");
+        }
     }
 
-    // Cập nhật tuyến đường
-    @PutMapping("/update-route/{routeId}")
-    public ResponseEntity<BmsRouter> updateRoute(@PathVariable Long routeId, @RequestBody RouterDTO routerDTO) {
+    // Xóa 1 tuyến đường
+    @DeleteMapping("/delete-router/{routeId}")
+    public ResponseEntity<?> deleteRoute(@PathVariable Long routeId) {
         try {
+            boolean deleted = routerService.deleteRouteById(routeId);
+            if (!deleted) {
+                // Nếu không tìm thấy tuyến đường để xóa
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tuyến đường không tồn tại.");
+            }
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            // Xử lý lỗi khác nếu có
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi hệ thống, vui lòng thử lại sau.");
+        }
+    }
+
+    @PutMapping("/update-router/{routeId}")
+    public ResponseEntity<?> updateRoute(@PathVariable Long routeId, @RequestBody RouterDTO routerDTO) {
+        try {
+            System.out.println("Data: " + routerDTO);
             // Fetch the existing route by routeId
             BmsRouter existingRouter = routerService.getRouterById(routeId);
             if (existingRouter == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 Not Found if route doesn't exist
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tuyến không tồn tại."); // 404 Not Found
             }
 
-            // Fetch the company by companyId from the DTO
-            BmsBusCompany company = companyService.getCompanyById(routerDTO.getCompanyId());
-            if (company == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 Not Found if company doesn't exist
-            }
 
             // Update the fields of the existing router
-            existingRouter.setName(routerDTO.getName());
-            existingRouter.setShortName(routerDTO.getShortName());
-            existingRouter.setPrice(routerDTO.getPrice());
+            existingRouter.setRouteName(routerDTO.getRouteName());
+            existingRouter.setRouteNameShort(routerDTO.getRouteNameShort());
+            existingRouter.setDisplayPrice(routerDTO.getDisplayPrice());
             existingRouter.setNote(routerDTO.getNote());
-            existingRouter.setCompany(company); // Update the company
+            existingRouter.setStatus(routerDTO.getStatus());
 
             // Save the updated route
             BmsRouter updatedRouter = routerService.updateRouter(existingRouter);
             return ResponseEntity.ok(updatedRouter); // Return 200 OK with the updated route
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 500 Internal Server Error if an error occurs
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống, vui lòng thử lại sau."); // 500 Internal Server Error
         }
     }
 

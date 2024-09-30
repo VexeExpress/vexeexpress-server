@@ -174,7 +174,7 @@ public class TripService {
 
         // Xử lý router, mặc định là "Unknown" nếu router null
         if (trip.getRouter() != null) {
-            dto.setRouterName(trip.getRouter().getName() != null ? trip.getRouter().getName() : "Unknown");
+            dto.setRouterName(trip.getRouter().getRouteName() != null ? trip.getRouter().getRouteName() : "Unknown");
         } else {
             dto.setRouterName("Unknown");
         }

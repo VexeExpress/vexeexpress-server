@@ -5,9 +5,11 @@ import lombok.Data;
 @Data
 public class RouterDTO {
     private Long id;
-    private String name;
-    private String shortName;
-    private Double price;
+    private String routeName;
+    private String routeNameShort;
+    private Double displayPrice;
     private String note;
-    private Long companyId;
+    private Boolean status;
+
+
 }
