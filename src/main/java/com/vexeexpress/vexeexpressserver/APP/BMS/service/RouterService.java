@@ -1,8 +1,10 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router.RouterDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.RouterDTO;
 import com.vexeexpress.vexeexpressserver.entity.BmsRouter;
 import com.vexeexpress.vexeexpressserver.repository.RouterRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +58,21 @@ public class RouterService {
 
     public BmsRouter updateRouter(BmsRouter updatedRouter) {
         return routerRepository.save(updatedRouter);
+    }
+
+    public List<RouterDTO_v2> getActiveRoutersByCompanyId(Long companyId) {
+        List<BmsRouter> routers = routerRepository.findAllActiveRoutersByCompanyId(companyId);
+        if (routers.isEmpty()) {
+            throw new EntityNotFoundException("Công ty không tồn tại hoặc không có router nào hoạt động.");
+        }
+        System.out.println(routers);
+
+        return routers.stream()
+                .map(router -> new RouterDTO_v2(
+                        router.getId(),
+                        router.getRouteName(),
+                        router.getDisplayPrice()
+                ))
+                .collect(Collectors.toList());
     }
 }

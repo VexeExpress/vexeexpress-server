@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v3;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request.SeatMapDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response.SeatMapDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.SeatMapService;
@@ -40,6 +41,15 @@ public class SeatMapController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null); // Có thể trả về một thông điệp lỗi chi tiết hơn nếu cần
+        }
+    }
+    @GetMapping("/seat-maps-name/{companyId}")
+    public ResponseEntity<List<SeatMapDTO_v3>> getSeatMapsNameByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<SeatMapDTO_v3> seatMap = seatMapService.getSeatMapsNameByCompanyId(companyId);
+            return ResponseEntity.ok(seatMap);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

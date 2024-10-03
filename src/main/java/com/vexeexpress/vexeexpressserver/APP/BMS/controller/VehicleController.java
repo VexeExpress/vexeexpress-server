@@ -1,5 +1,7 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v3;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Vehicle.VehicleDTO_v3;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.VehicleDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.VehicleDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
@@ -108,6 +110,16 @@ public class VehicleController {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/vehicles-name/{companyId}")
+    public ResponseEntity<List<VehicleDTO_v3>> getVehicleNameByCompanyId (@PathVariable Long companyId) {
+        try {
+            List<VehicleDTO_v3> seatMap = vehicleService.getVehicleNameByCompanyId(companyId);
+            return ResponseEntity.ok(seatMap);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

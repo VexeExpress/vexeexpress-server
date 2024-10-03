@@ -1,10 +1,12 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router.RouterDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.RouterDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.RouterService;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
 import com.vexeexpress.vexeexpressserver.entity.BmsRouter;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,20 @@ public class RouterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Đã xảy ra lỗi trong quá trình lấy danh sách tuyến. Vui lòng thử lại sau.");
         }
+    }
+    @GetMapping("/get-router-active/{companyId}")
+    public ResponseEntity<List<RouterDTO_v2>> getActiveRoutersByCompanyId(@PathVariable Long companyId) {
+        try {
+            System.out.println("CompanyId: " + companyId);
+            List<RouterDTO_v2> routers = routerService.getActiveRoutersByCompanyId(companyId);
+            System.out.println(routers);
+            return ResponseEntity.ok(routers);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Company not found or no active routers
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);  // General error
+        }
+
     }
 
     // Xóa 1 tuyến đường

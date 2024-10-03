@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Vehicle.VehicleDTO_v3;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.VehicleDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.VehicleDTO_v2;
 import com.vexeexpress.vexeexpressserver.entity.BmsVehicle;
@@ -46,5 +47,15 @@ public class VehicleService {
 
     public BmsVehicle getVehicleById(Long vehicleId) {
         return vehicleRepository.findById(vehicleId).orElse(null);
+    }
+
+    public List<VehicleDTO_v3> getVehicleNameByCompanyId(Long companyId) {
+        List<BmsVehicle> vehicles = vehicleRepository.findByCompanyId(companyId);
+        return vehicles.stream().map(entity -> {
+            VehicleDTO_v3 dto = new VehicleDTO_v3();
+            dto.setId(entity.getId());
+            dto.setLicensePlate(entity.getLicensePlate());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

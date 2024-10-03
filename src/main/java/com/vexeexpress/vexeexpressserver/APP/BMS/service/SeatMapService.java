@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v3;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request.SeatMapDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response.SeatDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response.SeatMapDTO_v2;
@@ -81,6 +82,16 @@ public class SeatMapService {
                 seatDTO.setStatus(seatEntity.getStatus());
                 return seatDTO;
             }).collect(Collectors.toList()));
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public List<SeatMapDTO_v3> getSeatMapsNameByCompanyId(Long companyId) {
+        List<BmsSeatMap> seatMaps = seatMapRepository.findByCompanyId(companyId);
+        return seatMaps.stream().map( entity -> {
+            SeatMapDTO_v3 dto = new SeatMapDTO_v3();
+            dto.setId(entity.getId());
+            dto.setSeatMapName(entity.getSeatMapName());
             return dto;
         }).collect(Collectors.toList());
     }
