@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User.UserDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.UserDTO;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
 import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
@@ -156,5 +157,15 @@ public class UserService {
         BmsUser user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setPassword(hashPassword(newPassword));
         userRepository.save(user);
+    }
+
+    public List<UserDTO_v2> getNameUserByCompanyId(Long companyId) {
+        List<BmsUser> users = userRepository.findByCompanyIdAndRole(companyId, 1);
+        return users.stream().map(entity -> {
+            UserDTO_v2 dto = new UserDTO_v2();
+            dto.setId(entity.getId());
+            dto.setName(entity.getName());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

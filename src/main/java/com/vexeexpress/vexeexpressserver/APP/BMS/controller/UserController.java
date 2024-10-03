@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User.UserDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.UserDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
@@ -173,6 +174,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error changing password");
         }
     }
+    @GetMapping("/get-list-name-user/{companyId}")
+    public ResponseEntity<List<UserDTO_v2>> getNameUserByCompanyId(@PathVariable Long companyId){
+        try {
+            List<UserDTO_v2> user = userService.getNameUserByCompanyId(companyId);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 
     @GetMapping("/all")
@@ -202,5 +212,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }
