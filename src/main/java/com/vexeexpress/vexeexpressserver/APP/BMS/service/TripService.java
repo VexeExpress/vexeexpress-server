@@ -1,13 +1,19 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO_v2;
 import com.vexeexpress.vexeexpressserver.entity.*;
 import com.vexeexpress.vexeexpressserver.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.swing.text.html.Option;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TripService {
@@ -37,7 +43,11 @@ public class TripService {
             trip.setVehicleId(tripDTO.getVehicleId());
             trip.setRouterId(tripDTO.getRouterId());
             trip.setSeatMapId(tripDTO.getSeatMapId());
-            trip.setCompany(tripDTO.getCompanyId());
+
+            BmsBusCompany company = companyRepository.findById(tripDTO.getCompanyId())
+                    .orElseThrow(() -> new RuntimeException("Company not found with ID: " + tripDTO.getCompanyId()));
+            trip.setCompany(company);
+
 
             System.out.println("Saving trip: " + trip);
             return tripRepository.save(trip);
@@ -102,8 +112,65 @@ public class TripService {
     }
 
 
+    public List<TripDTO_v2> searchTrips(Long companyId, LocalDate dateTrip, Long routerId) {
+        System.out.println("CompanyID: " + companyId);
+        System.out.println("Date: " + dateTrip);
+        System.out.println("RouterID: " + routerId);
 
-//    public List<BmsTrip> searchTrips(Long valueRouter, String valueDayDeparture, Long companyId) {
+        long startTime = System.currentTimeMillis();
+        Optional<BmsBusCompany> companyOptional = companyRepository.findById(companyId);
+        if (!companyOptional.isPresent()) {
+            throw new EntityNotFoundException("Company not found");
+        }
+        BmsBusCompany company = companyOptional.get();
+        List<BmsTrip> trips = tripRepository.findByCompanyAndDateTripAndRouterId(company, dateTrip, routerId);
+        long duration = System.currentTimeMillis() - startTime;
+
+        System.out.println("Number of trips found: " + trips.size());
+        System.out.println("Query executed in: " + duration + " ms");
+
+        return trips.stream().map(trip -> {
+            TripDTO_v2 tripDTO = new TripDTO_v2();
+
+            tripDTO.setId(trip.getId());
+            tripDTO.setTime(trip.getTime());
+
+            Optional<BmsSeatMap> seatMapOptional = seatMapRepository.findById(trip.getSeatMapId());
+            seatMapOptional.ifPresent(seatMap -> {
+                tripDTO.setSeatMapName(seatMap.getSeatMapName());
+            });
+
+            if (trip.getVehicleId() != null) {
+                Optional<BmsVehicle> vehicleOptional = vehicleRepository.findById(trip.getVehicleId());
+                vehicleOptional.ifPresent(vehicle -> {
+                    tripDTO.setLicensePlate(vehicle.getLicensePlate());
+                });
+            } else {
+                tripDTO.setLicensePlate(null);
+            }
+
+            if (trip.getUserId() != null && !trip.getUserId().isEmpty()) {
+                List<String> userNames = new ArrayList<>();
+                List<Long> userIds = trip.getUserId().stream().map(Integer::longValue).collect(Collectors.toList());
+                List<BmsUser> users = userRepository.findAllById(userIds);
+
+                for (BmsUser user : users) {
+                    userNames.add(user.getName());
+                }
+                tripDTO.setUser(userNames);
+            } else {
+                tripDTO.setUser(null);
+            }
+
+            System.out.println(tripDTO); // In ra thông tin chuyến đi
+            return tripDTO;
+        }).collect(Collectors.toList());
+    }
+
+
+
+
+    //    public List<BmsTrip> searchTrips(Long valueRouter, String valueDayDeparture, Long companyId) {
 //        System.out.println("Received request: valueRouter=" + valueRouter + ", valueDayDeparture=" + valueDayDeparture + ", companyId=" + companyId);
 //        List<BmsTrip> allTrips = getAllTrips();
 //        System.out.println("All trip: " + allTrips);
@@ -150,6 +217,7 @@ public class TripService {
     public List<BmsTrip> getAllTrips() {
         return tripRepository.findAll();
     }
+
 
 
 

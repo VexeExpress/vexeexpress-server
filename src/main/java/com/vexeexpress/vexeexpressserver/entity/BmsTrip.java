@@ -17,8 +17,9 @@ public class BmsTrip {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "company_id", nullable = false)
-    private Long company;
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 
     @Column(name = "date_trip", nullable = false)
     private LocalDate dateTrip;

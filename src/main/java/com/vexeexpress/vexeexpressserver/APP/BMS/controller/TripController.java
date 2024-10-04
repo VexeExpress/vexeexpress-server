@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -35,14 +37,21 @@ public class TripController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
-//    @GetMapping("/search")
-//    public ResponseEntity<List<TripDTO_v2>> searchTrips (
-//            @RequestParam Long companyId,
-//            @RequestParam LocalTime date,
-//            @RequestParam Long routerId,
-//            ) {
-////        List<TripDTO_v2> trips = tripService.searchTrips(companyId, date, routerId);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<TripDTO_v2>> searchTrips(
+            @RequestParam Long companyId,
+            @RequestParam LocalDate dateTrip,
+            @RequestParam Long routerId) {
+        try {
+            List<TripDTO_v2> trips = tripService.searchTrips(companyId, dateTrip, routerId);
+            return ResponseEntity.ok(trips);
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body(null); // Return 400 Bad Request
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // Return 500 Internal Server Error
+        }
+    }
 
 //    @GetMapping("/get-info-trip/{tripId}")
 //    public ResponseEntity<TripDTO_v3> getTripDetails(@PathVariable Long tripId) {

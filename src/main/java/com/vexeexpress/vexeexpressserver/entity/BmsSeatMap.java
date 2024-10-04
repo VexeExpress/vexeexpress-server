@@ -31,4 +31,5 @@ public class BmsSeatMap {
     private List<BmsSeat> seat = new ArrayList<>();
 
 
+
 }
