@@ -56,25 +56,7 @@ public class TripService {
             trip.setCompany(company);
             System.out.println("Company: " + trip.getCompany()); // In ra thông tin công ty
 
-            // Lấy thông tin router từ repository
-            BmsRouter router = routerRepository.findById(tripDTO.getRouterId())
-                    .orElseThrow(() -> new RuntimeException("Route not found"));
-            trip.setRouterId(router);
-            System.out.println("Router: " + trip.getRouterId()); // In ra thông tin router
 
-            // Lấy thông tin seat map từ repository
-            BmsSeatMap seatMap = seatMapRepository.findById(tripDTO.getSeatMapId())
-                    .orElseThrow(() -> new RuntimeException("Seat map not found"));
-            trip.setSeatMapId(seatMap);
-            System.out.println("Seat Map: " + trip.getSeatMapId()); // In ra thông tin seat map
-
-            // Nếu vehicleId không null, tìm thông tin vehicle
-            if (tripDTO.getVehicleId() != null) {
-                BmsVehicle vehicle = vehicleRepository.findById(tripDTO.getVehicleId())
-                        .orElseThrow(() -> new RuntimeException("Vehicle not found"));
-                trip.setVehicleId(vehicle);
-                System.out.println("Vehicle: " + trip.getVehicleId()); // In ra thông tin vehicle
-            }
 
             // In ra thông tin mới tạo của BmsTrip
             System.out.println("New Data Trip: " + trip);
