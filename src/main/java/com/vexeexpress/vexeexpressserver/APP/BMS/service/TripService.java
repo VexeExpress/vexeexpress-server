@@ -50,12 +50,6 @@ public class TripService {
 
             System.out.println("Creating trip with data: " + tripDTO);
 
-            // Lấy thông tin company từ repository
-            BmsBusCompany company = companyRepository.findById(tripDTO.getCompanyId())
-                    .orElseThrow(() -> new RuntimeException("Company not found"));
-            trip.setCompany(company);
-            System.out.println("Company: " + trip.getCompany()); // In ra thông tin công ty
-
 
 
             // In ra thông tin mới tạo của BmsTrip
