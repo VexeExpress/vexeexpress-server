@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Company.CompanyDTO;
 import lombok.Data;
 
 import java.util.List;

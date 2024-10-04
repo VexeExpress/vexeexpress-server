@@ -19,26 +19,27 @@ public class BmsTrip {
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
     private BmsBusCompany company;
 
-    @Column(name = "valueChairDiagram", nullable = false)
-    private String valueChairDiagram;
+    @Column(name = "date_trip", nullable = false)
+    private LocalDate dateTrip;
 
-    @Column(name = "valueDayDeparture", nullable = false)
-    private LocalDate valueDayDeparture;
-
-    @Column(name = "valueTimeDeparture", nullable = false)
-    private LocalTime valueTimeDeparture;
+    @Column(name = "time", nullable = false)
+    private LocalTime time;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
-    private BmsVehicle vehicle;
+    private BmsVehicle vehicleId;
 
     @ManyToOne
     @JoinColumn(name = "router_id", referencedColumnName = "id", nullable = false)
-    private BmsRouter router;
+    private BmsRouter routerId;
 
-    @Column(name = "valueNote")
-    private String valueNote;
+    @ManyToOne
+    @JoinColumn(name = "seat_map_id", referencedColumnName = "id", nullable = false)
+    private BmsSeatMap seatMapId;
 
-    @Column(name = "valueDriver")
-    private List<Integer> valueDriver;
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "user_id")
+    private List<Integer> userId;
 }

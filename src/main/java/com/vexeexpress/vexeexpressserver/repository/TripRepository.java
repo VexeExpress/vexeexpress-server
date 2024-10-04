@@ -10,10 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface TripRepository extends JpaRepository<BmsTrip, Long> {
-//    List<BmsTrip> findByValueRouter(String valueRouter);
-
-    List<BmsTrip> findByCompanyId(Long companyId);
-    List<BmsTrip> findByRouterId(Long routerId);
 
 
 }

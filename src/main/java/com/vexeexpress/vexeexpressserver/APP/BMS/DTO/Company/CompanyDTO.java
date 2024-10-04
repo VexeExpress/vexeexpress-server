@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Company;
 
 import lombok.Data;
 
