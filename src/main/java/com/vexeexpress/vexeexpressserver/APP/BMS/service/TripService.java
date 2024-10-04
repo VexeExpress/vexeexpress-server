@@ -1,19 +1,13 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.TripDTO_v2;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.TripDTO_v3;
 import com.vexeexpress.vexeexpressserver.entity.*;
 import com.vexeexpress.vexeexpressserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TripService {
@@ -33,36 +27,33 @@ public class TripService {
     SeatMapRepository seatMapRepository;
 
     public BmsTrip createTrip(TripDTO tripDTO) {
-        BmsTrip trip = new BmsTrip();
         try {
-            // Gán các giá trị từ DTO cho entity BmsTrip
+            BmsTrip trip = new BmsTrip();
+
             trip.setDateTrip(tripDTO.getDateTrip());
-            System.out.println("Date Trip: " + trip.getDateTrip());
-
             trip.setNote(tripDTO.getNote());
-            System.out.println("Note: " + trip.getNote());
-
             trip.setTime(tripDTO.getTime());
-            System.out.println("Time: " + trip.getTime());
-
             trip.setUserId(tripDTO.getUserId());
-            System.out.println("User ID: " + trip.getUserId());
+            trip.setVehicleId(tripDTO.getVehicleId());
+            trip.setRouterId(tripDTO.getRouterId());
+            trip.setSeatMapId(tripDTO.getSeatMapId());
+            trip.setCompany(tripDTO.getCompanyId());
 
-            System.out.println("Creating trip with data: " + tripDTO);
+            System.out.println("Saving trip: " + trip);
+            return tripRepository.save(trip);
 
-
-
-            // In ra thông tin mới tạo của BmsTrip
-            System.out.println("New Data Trip: " + trip);
+        } catch (DataIntegrityViolationException e) {
+            System.err.println("Data integrity violation: " + e.getMessage());
+            throw new RuntimeException("Failed to create trip due to data integrity violation", e);
         } catch (Exception e) {
-            // Xử lý ngoại lệ và in ra lỗi chi tiết
             System.err.println("Error while creating trip: " + e.getMessage());
-            e.printStackTrace();
-            // Có thể ném lại ngoại lệ hoặc trả về giá trị mặc định
             throw new RuntimeException("Failed to create trip", e);
         }
-        return trip;
     }
+
+
+
+
 
 
 //    public BmsTrip createTrip(TripDTO tripDTO) {

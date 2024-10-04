@@ -18,7 +18,7 @@ public class BmsTrip {
     private Long id;
 
     @Column(name = "company_id", nullable = false)
-    private BmsBusCompany company;
+    private Long company;
 
     @Column(name = "date_trip", nullable = false)
     private LocalDate dateTrip;

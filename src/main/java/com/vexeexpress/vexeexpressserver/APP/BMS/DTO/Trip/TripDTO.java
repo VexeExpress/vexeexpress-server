@@ -8,7 +8,6 @@ import java.time.LocalTime;
 import java.util.List;
 @Data
 public class TripDTO {
-    private Long id;
     private Long routerId;
     private LocalDate dateTrip;
     private Long vehicleId;

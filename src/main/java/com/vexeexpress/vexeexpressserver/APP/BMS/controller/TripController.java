@@ -1,16 +1,17 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.TripDTO_v2;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.TripDTO_v3;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TripService;
 import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -25,12 +26,24 @@ public class TripController {
     @PostMapping("/create-trip")
     public ResponseEntity<?> createTrip(@RequestBody TripDTO tripDTO) {
         try {
+            System.out.println("New Data: " + tripDTO);
             BmsTrip createdTrip = tripService.createTrip(tripDTO);
-            return new ResponseEntity<>(createdTrip, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTrip);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data provided.");
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
+//    @GetMapping("/search")
+//    public ResponseEntity<List<TripDTO_v2>> searchTrips (
+//            @RequestParam Long companyId,
+//            @RequestParam LocalTime date,
+//            @RequestParam Long routerId,
+//            ) {
+////        List<TripDTO_v2> trips = tripService.searchTrips(companyId, date, routerId);
+//    }
+
 //    @GetMapping("/get-info-trip/{tripId}")
 //    public ResponseEntity<TripDTO_v3> getTripDetails(@PathVariable Long tripId) {
 //        try {
