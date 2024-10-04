@@ -29,13 +29,66 @@ public class TripService {
     BmsBusRepository busRepository;
     @Autowired
     CompanyRepository companyRepository;
+    @Autowired
+    SeatMapRepository seatMapRepository;
 
     public BmsTrip createTrip(TripDTO tripDTO) {
         BmsTrip trip = new BmsTrip();
-        trip.setDateTrip(tripDTO.getDateTrip());
-        trip.setNote(tripDTO.getNote());
+        try {
+            // Gán các giá trị từ DTO cho entity BmsTrip
+            trip.setDateTrip(tripDTO.getDateTrip());
+            System.out.println("Date Trip: " + trip.getDateTrip());
 
+            trip.setNote(tripDTO.getNote());
+            System.out.println("Note: " + trip.getNote());
+
+            trip.setTime(tripDTO.getTime());
+            System.out.println("Time: " + trip.getTime());
+
+            trip.setUserId(tripDTO.getUserId());
+            System.out.println("User ID: " + trip.getUserId());
+
+            System.out.println("Creating trip with data: " + tripDTO);
+
+            // Lấy thông tin company từ repository
+            BmsBusCompany company = companyRepository.findById(tripDTO.getCompanyId())
+                    .orElseThrow(() -> new RuntimeException("Company not found"));
+            trip.setCompany(company);
+            System.out.println("Company: " + trip.getCompany()); // In ra thông tin công ty
+
+            // Lấy thông tin router từ repository
+            BmsRouter router = routerRepository.findById(tripDTO.getRouterId())
+                    .orElseThrow(() -> new RuntimeException("Route not found"));
+            trip.setRouterId(router);
+            System.out.println("Router: " + trip.getRouterId()); // In ra thông tin router
+
+            // Lấy thông tin seat map từ repository
+            BmsSeatMap seatMap = seatMapRepository.findById(tripDTO.getSeatMapId())
+                    .orElseThrow(() -> new RuntimeException("Seat map not found"));
+            trip.setSeatMapId(seatMap);
+            System.out.println("Seat Map: " + trip.getSeatMapId()); // In ra thông tin seat map
+
+            // Nếu vehicleId không null, tìm thông tin vehicle
+            if (tripDTO.getVehicleId() != null) {
+                BmsVehicle vehicle = vehicleRepository.findById(tripDTO.getVehicleId())
+                        .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+                trip.setVehicleId(vehicle);
+                System.out.println("Vehicle: " + trip.getVehicleId()); // In ra thông tin vehicle
+            }
+
+            // In ra thông tin mới tạo của BmsTrip
+            System.out.println("New Data Trip: " + trip);
+        } catch (Exception e) {
+            // Xử lý ngoại lệ và in ra lỗi chi tiết
+            System.err.println("Error while creating trip: " + e.getMessage());
+            e.printStackTrace();
+            // Có thể ném lại ngoại lệ hoặc trả về giá trị mặc định
+            throw new RuntimeException("Failed to create trip", e);
+        }
+        return trip;
     }
+
+
 //    public BmsTrip createTrip(TripDTO tripDTO) {
 //        try {
 //            // Tạo thực thể BmsTrip từ DTO

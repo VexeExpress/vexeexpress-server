@@ -9,12 +9,12 @@ import java.util.List;
 @Data
 public class TripDTO {
     private Long id;
-    private Long routeId;
+    private Long routerId;
     private LocalDate dateTrip;
     private Long vehicleId;
     private List<Integer> userId;
     private Long seatMapId;
     private LocalTime time;
     private String note;
-    private CompanyDTO company;
+    private Long companyId;
 }

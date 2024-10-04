@@ -2,6 +2,8 @@ package com.vexeexpress.vexeexpressserver.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,8 +17,7 @@ public class BmsTrip {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    @Column(name = "company_id", nullable = false)
     private BmsBusCompany company;
 
     @Column(name = "date_trip", nullable = false)
@@ -25,17 +26,14 @@ public class BmsTrip {
     @Column(name = "time", nullable = false)
     private LocalTime time;
 
-    @ManyToOne
-    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
-    private BmsVehicle vehicleId;
+    @Column(name = "vehicle_id", nullable = true)
+    private Long vehicleId;
 
-    @ManyToOne
-    @JoinColumn(name = "router_id", referencedColumnName = "id", nullable = false)
-    private BmsRouter routerId;
+    @Column(name = "router_id", nullable = false)
+    private Long routerId;
 
-    @ManyToOne
-    @JoinColumn(name = "seat_map_id", referencedColumnName = "id", nullable = false)
-    private BmsSeatMap seatMapId;
+    @Column(name = "seat_map_id", nullable = false)
+    private Long seatMapId;
 
     @Column(name = "note")
     private String note;
@@ -43,3 +41,5 @@ public class BmsTrip {
     @Column(name = "user_id")
     private List<Integer> userId;
 }
+
+

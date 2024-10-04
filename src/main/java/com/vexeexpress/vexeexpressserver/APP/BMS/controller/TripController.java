@@ -25,7 +25,6 @@ public class TripController {
     @PostMapping("/create-trip")
     public ResponseEntity<?> createTrip(@RequestBody TripDTO tripDTO) {
         try {
-            System.out.println(tripDTO);
             BmsTrip createdTrip = tripService.createTrip(tripDTO);
             return new ResponseEntity<>(createdTrip, HttpStatus.CREATED);
         } catch (Exception e) {
