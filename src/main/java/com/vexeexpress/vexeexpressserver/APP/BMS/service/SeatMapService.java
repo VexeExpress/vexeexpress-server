@@ -1,14 +1,15 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v3;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request.SeatMapDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response.SeatDTO_v2;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response.SeatMapDTO_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.*;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
 import com.vexeexpress.vexeexpressserver.entity.BmsSeat;
 import com.vexeexpress.vexeexpressserver.entity.BmsSeatMap;
+import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
 import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import com.vexeexpress.vexeexpressserver.repository.SeatMapRepository;
+import com.vexeexpress.vexeexpressserver.repository.SeatRepository;
+import com.vexeexpress.vexeexpressserver.repository.TripRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,10 @@ public class SeatMapService {
     SeatMapRepository seatMapRepository;
     @Autowired
     CompanyRepository companyRepository;
+    @Autowired
+    TripRepository tripRepository;
+    @Autowired
+    SeatRepository seatRepository;
 
     public BmsSeatMap createSeatMap(SeatMapDTO seatMapDTO) {
         // Create BmsSeatMap object from DTO
@@ -94,5 +99,75 @@ public class SeatMapService {
             dto.setSeatMapName(entity.getSeatMapName());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    public SeatMapDTO_v2 getSeatMapByTripId(Long tripId) {
+        BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));
+        System.out.println("Trip được chọn:" + trip);
+
+        Long seatMapId = trip.getSeatMapId();
+        System.out.println("seatMapId: " + seatMapId);
+
+
+
+
+
+
+//        BmsSeatMap seatMap = seatMapRepository.findById(trip.getSeatMapId()).orElse(null);
+//
+//        if (seatMapId == null) {
+//            return Collections.emptyList(); // Trả về danh sách rỗng
+//        }
+//        System.out.println("Sơ đồ ghế:" + seatMap);
+
+
+        return null;
+    }
+
+    public SeatMapDTO_v4 getSeatMapById(Long id) throws Exception {
+        Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
+
+        if (seatMap.isPresent()) {
+            // Chuyển đổi từ BmsSeatMap sang SeatMapDTO_v4
+            return convertToDTO(seatMap.get());
+        } else {
+            throw new Exception("Seat map not found");
+        }
+    }
+
+    public SeatMapDTO_v4 convertToDTO(BmsSeatMap seatMap) {
+        SeatMapDTO_v4 seatMapDTO = new SeatMapDTO_v4();
+
+        seatMapDTO.setId(seatMap.getId());
+        seatMapDTO.setSeatMapName(seatMap.getSeatMapName());
+        seatMapDTO.setFloor(seatMap.getFloor());
+        seatMapDTO.setRow(seatMap.getRow());
+        seatMapDTO.setColumn(seatMap.getSeatColumn());
+
+        // Chuyển đổi danh sách BmsSeat sang SeatDTO_v3
+        List<SeatDTO_v3> seatDTOList = seatMap.getSeat().stream().map(seat -> {
+            SeatDTO_v3 seatDTO = new SeatDTO_v3();
+
+            seatDTO.setId(seat.getId()); // ID của ghế
+            seatDTO.setFloor(seat.getFloor()); // Tầng của ghế
+            seatDTO.setRow(seat.getRow()); // Hàng của ghế
+            seatDTO.setSeatColumn(seat.getSeatColumn()); // Cột của ghế
+            seatDTO.setName(seat.getName()); // Tên ghế
+            seatDTO.setStatus(seat.getStatus()); // Trạng thái của ghế
+
+            return seatDTO;
+        }).collect(Collectors.toList());
+
+        // Gán danh sách SeatDTO vào SeatMapDTO
+        seatMapDTO.setSeats(seatDTOList);
+        return seatMapDTO;
+    }
+
+    public Long getSeatMapIdByTripId(Long tripId) {
+        BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));
+        System.out.println("Trip được chọn:" + trip);
+        Long seatMapId = trip.getSeatMapId();
+        System.out.println("seatMapId: " + seatMapId);
+        return trip.getSeatMapId();
     }
 }

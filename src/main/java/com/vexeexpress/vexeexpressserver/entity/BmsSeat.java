@@ -20,4 +20,6 @@ public class BmsSeat {
     @ManyToOne
     @JoinColumn(name = "seat_map_id", referencedColumnName = "id", nullable = false)
     private BmsSeatMap bmsSeatMap;
+
+
 }

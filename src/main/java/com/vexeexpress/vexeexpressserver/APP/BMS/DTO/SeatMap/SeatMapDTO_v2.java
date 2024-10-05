@@ -1,6 +1,5 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request.SeatDTO;
 import lombok.Data;
 
 import java.util.List;

@@ -1,20 +1,18 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v3;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request.SeatMapDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.response.SeatMapDTO_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v4;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.SeatMapDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.SeatMapService;
-import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
-import com.vexeexpress.vexeexpressserver.entity.BmsSeat;
 import com.vexeexpress.vexeexpressserver.entity.BmsSeatMap;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/bms/seat-map")
@@ -52,6 +50,46 @@ public class SeatMapController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+    @GetMapping("/seat-map-id-by-trip-id/{tripId}")
+    public ResponseEntity<Long> getSeatMapIdByTripId(@PathVariable Long tripId) {
+        try {
+            // Kiểm tra xem tripId có hợp lệ không
+            if (tripId <= 0) {
+                return ResponseEntity.badRequest().body(null); // Trả về 400 nếu ID không hợp lệ
+            }
+
+            Long seatMapId = seatMapService.getSeatMapIdByTripId(tripId);
+
+            // Nếu không tìm thấy seatMapId, trả về 404
+            if (seatMapId == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            return ResponseEntity.ok(seatMapId);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Trả về 404 nếu không tìm thấy
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Trả về 500 cho lỗi khác
+        }
+    }
+
+    @GetMapping("/seat-map-by-id/{id}")
+    public ResponseEntity<SeatMapDTO_v4> getSeatMapById(@PathVariable Long id) {
+        try {
+            SeatMapDTO_v4 seatMapDTO = seatMapService.getSeatMapById(id);
+            return ResponseEntity.ok(seatMapDTO);
+        } catch (Exception e) {
+            if (e.getMessage().equals("Seat map not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Trả về 404 nếu không tìm thấy
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        }
+    }
+
+
+
+
 
 
 }

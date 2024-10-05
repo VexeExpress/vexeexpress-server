@@ -1,9 +1,10 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.request;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap;
 
 import lombok.Data;
 
 @Data
 public class SeatDTO {
+    private Long id;
     private Integer floor;
     private Integer row;
     private Integer column;
