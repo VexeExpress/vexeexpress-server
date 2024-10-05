@@ -28,7 +28,7 @@ public class TripController {
     @PostMapping("/create-trip")
     public ResponseEntity<?> createTrip(@RequestBody TripDTO tripDTO) {
         try {
-            System.out.println("New Data: " + tripDTO);
+
             BmsTrip createdTrip = tripService.createTrip(tripDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTrip);
         } catch (DataIntegrityViolationException e) {

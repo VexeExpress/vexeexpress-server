@@ -22,8 +22,6 @@ public class TicketService {
     @Autowired
     TicketRepository ticketRepository;
     @Autowired
-    TicketRepository_v2 ticketRepository_v2;
-    @Autowired
     UserRepository userRepository;
     @Autowired
     TripRepository tripRepository;

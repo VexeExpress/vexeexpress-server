@@ -1,20 +1,8 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.BmsTicketDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.TicketDTO_v1;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TicketService;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.Ticket.DeleteRoomsRequest;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.Ticket.SeatUpdatePayload;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.Ticket.TicketRequest_v2;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.TicketRequest;
-import com.vexeexpress.vexeexpressserver.entity.BmsTicket;
-import com.vexeexpress.vexeexpressserver.entity.BmsTicket_v2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/bms/ticket")

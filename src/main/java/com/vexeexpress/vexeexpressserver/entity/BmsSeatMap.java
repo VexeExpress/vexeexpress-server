@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class BmsSeatMap {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "seat_map_name")
     private String seatMapName;
@@ -28,7 +28,7 @@ public class BmsSeatMap {
     private BmsBusCompany company;
 
     @OneToMany(mappedBy = "bmsSeatMap", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BmsSeat> seat = new ArrayList<>();
+    private List<BmsSeat> seats = new ArrayList<>();
 
 
 }

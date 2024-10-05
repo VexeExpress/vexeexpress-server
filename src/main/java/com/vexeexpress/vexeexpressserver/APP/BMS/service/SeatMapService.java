@@ -36,6 +36,7 @@ public class SeatMapService {
         seatMap.setRow(seatMapDTO.getRow());
         seatMap.setFloor(seatMapDTO.getFloor());
 
+
         // Get company info from database; ignore ResourceNotFoundException
         Optional<BmsBusCompany> optionalCompany = companyRepository.findById(seatMapDTO.getCompany().getId());
         if (optionalCompany.isPresent()) {
@@ -57,39 +58,39 @@ public class SeatMapService {
         }).collect(Collectors.toList());
 
         // Set seat list for the seat map
-        seatMap.setSeat(seats);
+        seatMap.setSeats(seats);
 
         // Save seat map and related seats
         return seatMapRepository.save(seatMap);
     }
 
 
-    public List<SeatMapDTO_v2> getSeatMapByCompanyId(Long companyId) {
-        // Truy vấn sơ đồ ghế từ repository
-        List<BmsSeatMap> seatMaps = seatMapRepository.findByCompanyId(companyId);
-
-        // Chuyển đổi từ Entity sang DTO
-        return seatMaps.stream().map(entity -> {
-            SeatMapDTO_v2 dto = new SeatMapDTO_v2();
-            dto.setId(entity.getId());
-            dto.setSeatMapName(entity.getSeatMapName());
-            dto.setRow(entity.getRow());
-            dto.setFloor(entity.getFloor());
-            dto.setColumn(entity.getSeatColumn());
-
-            dto.setSeats(entity.getSeat().stream().map(seatEntity -> {
-                SeatDTO_v2 seatDTO = new SeatDTO_v2();
-                seatDTO.setId(seatEntity.getId());
-                seatDTO.setFloor(seatEntity.getFloor());
-                seatDTO.setRow(seatEntity.getRow());
-                seatDTO.setColumn(seatEntity.getSeatColumn());
-                seatDTO.setName(seatEntity.getName());
-                seatDTO.setStatus(seatEntity.getStatus());
-                return seatDTO;
-            }).collect(Collectors.toList()));
-            return dto;
-        }).collect(Collectors.toList());
-    }
+//    public List<SeatMapDTO_v2> getSeatMapByCompanyId(Long companyId) {
+//        // Truy vấn sơ đồ ghế từ repository
+//        List<BmsSeatMap> seatMaps = seatMapRepository.findByCompanyId(companyId);
+//
+//        // Chuyển đổi từ Entity sang DTO
+//        return seatMaps.stream().map(entity -> {
+//            SeatMapDTO_v2 dto = new SeatMapDTO_v2();
+//            dto.setId(entity.getId());
+//            dto.setSeatMapName(entity.getSeatMapName());
+//            dto.setRow(entity.getRow());
+//            dto.setFloor(entity.getFloor());
+//            dto.setColumn(entity.getSeatColumn());
+//
+//            dto.setSeats(entity.getSeat().stream().map(seatEntity -> {
+//                SeatDTO_v2 seatDTO = new SeatDTO_v2();
+//                seatDTO.setId(seatEntity.getId());
+//                seatDTO.setFloor(seatEntity.getFloor());
+//                seatDTO.setRow(seatEntity.getRow());
+//                seatDTO.setColumn(seatEntity.getSeatColumn());
+//                seatDTO.setName(seatEntity.getName());
+//                seatDTO.setStatus(seatEntity.getStatus());
+//                return seatDTO;
+//            }).collect(Collectors.toList()));
+//            return dto;
+//        }).collect(Collectors.toList());
+//    }
 
     public List<SeatMapDTO_v3> getSeatMapsNameByCompanyId(Long companyId) {
         List<BmsSeatMap> seatMaps = seatMapRepository.findByCompanyId(companyId);
@@ -124,44 +125,44 @@ public class SeatMapService {
         return null;
     }
 
-    public SeatMapDTO_v4 getSeatMapById(Long id) throws Exception {
-        Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
+//    public SeatMapDTO_v4 getSeatMapById(Long id) throws Exception {
+//        Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
+//
+//        if (seatMap.isPresent()) {
+//            // Chuyển đổi từ BmsSeatMap sang SeatMapDTO_v4
+//            return convertToDTO(seatMap.get());
+//        } else {
+//            throw new Exception("Seat map not found");
+//        }
+//    }
 
-        if (seatMap.isPresent()) {
-            // Chuyển đổi từ BmsSeatMap sang SeatMapDTO_v4
-            return convertToDTO(seatMap.get());
-        } else {
-            throw new Exception("Seat map not found");
-        }
-    }
-
-    public SeatMapDTO_v4 convertToDTO(BmsSeatMap seatMap) {
-        SeatMapDTO_v4 seatMapDTO = new SeatMapDTO_v4();
-
-        seatMapDTO.setId(seatMap.getId());
-        seatMapDTO.setSeatMapName(seatMap.getSeatMapName());
-        seatMapDTO.setFloor(seatMap.getFloor());
-        seatMapDTO.setRow(seatMap.getRow());
-        seatMapDTO.setColumn(seatMap.getSeatColumn());
-
-        // Chuyển đổi danh sách BmsSeat sang SeatDTO_v3
-        List<SeatDTO_v3> seatDTOList = seatMap.getSeat().stream().map(seat -> {
-            SeatDTO_v3 seatDTO = new SeatDTO_v3();
-
-            seatDTO.setId(seat.getId()); // ID của ghế
-            seatDTO.setFloor(seat.getFloor()); // Tầng của ghế
-            seatDTO.setRow(seat.getRow()); // Hàng của ghế
-            seatDTO.setSeatColumn(seat.getSeatColumn()); // Cột của ghế
-            seatDTO.setName(seat.getName()); // Tên ghế
-            seatDTO.setStatus(seat.getStatus()); // Trạng thái của ghế
-
-            return seatDTO;
-        }).collect(Collectors.toList());
-
-        // Gán danh sách SeatDTO vào SeatMapDTO
-        seatMapDTO.setSeats(seatDTOList);
-        return seatMapDTO;
-    }
+//    public SeatMapDTO_v4 convertToDTO(BmsSeatMap seatMap) {
+//        SeatMapDTO_v4 seatMapDTO = new SeatMapDTO_v4();
+//
+//        seatMapDTO.setId(seatMap.getId());
+//        seatMapDTO.setSeatMapName(seatMap.getSeatMapName());
+//        seatMapDTO.setFloor(seatMap.getFloor());
+//        seatMapDTO.setRow(seatMap.getRow());
+//        seatMapDTO.setColumn(seatMap.getSeatColumn());
+//
+//        // Chuyển đổi danh sách BmsSeat sang SeatDTO_v3
+//        List<SeatDTO_v3> seatDTOList = seatMap.getSeat().stream().map(seat -> {
+//            SeatDTO_v3 seatDTO = new SeatDTO_v3();
+//
+//            seatDTO.setId(seat.getId()); // ID của ghế
+//            seatDTO.setFloor(seat.getFloor()); // Tầng của ghế
+//            seatDTO.setRow(seat.getRow()); // Hàng của ghế
+//            seatDTO.setSeatColumn(seat.getSeatColumn()); // Cột của ghế
+//            seatDTO.setName(seat.getName()); // Tên ghế
+//            seatDTO.setStatus(seat.getStatus()); // Trạng thái của ghế
+//
+//            return seatDTO;
+//        }).collect(Collectors.toList());
+//
+//        // Gán danh sách SeatDTO vào SeatMapDTO
+//        seatMapDTO.setSeats(seatDTOList);
+//        return seatMapDTO;
+//    }
 
     public Long getSeatMapIdByTripId(Long tripId) {
         BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));

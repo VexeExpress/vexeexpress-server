@@ -31,16 +31,16 @@ public class SeatMapController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    @GetMapping("/seat-maps/{companyId}")
-    public ResponseEntity<List<SeatMapDTO_v2>> getSeatMapsByCompanyId(@PathVariable Long companyId) {
-        try {
-            List<SeatMapDTO_v2> seatMaps = seatMapService.getSeatMapByCompanyId(companyId);
-            return ResponseEntity.ok(seatMaps);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null); // Có thể trả về một thông điệp lỗi chi tiết hơn nếu cần
-        }
-    }
+//    @GetMapping("/seat-maps/{companyId}")
+//    public ResponseEntity<List<SeatMapDTO_v2>> getSeatMapsByCompanyId(@PathVariable Long companyId) {
+//        try {
+//            List<SeatMapDTO_v2> seatMaps = seatMapService.getSeatMapByCompanyId(companyId);
+//            return ResponseEntity.ok(seatMaps);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(null); // Có thể trả về một thông điệp lỗi chi tiết hơn nếu cần
+//        }
+//    }
     @GetMapping("/seat-maps-name/{companyId}")
     public ResponseEntity<List<SeatMapDTO_v3>> getSeatMapsNameByCompanyId(@PathVariable Long companyId) {
         try {
@@ -73,19 +73,19 @@ public class SeatMapController {
         }
     }
 
-    @GetMapping("/seat-map-by-id/{id}")
-    public ResponseEntity<SeatMapDTO_v4> getSeatMapById(@PathVariable Long id) {
-        try {
-            SeatMapDTO_v4 seatMapDTO = seatMapService.getSeatMapById(id);
-            return ResponseEntity.ok(seatMapDTO);
-        } catch (Exception e) {
-            if (e.getMessage().equals("Seat map not found")) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Trả về 404 nếu không tìm thấy
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-            }
-        }
-    }
+//    @GetMapping("/seat-map-by-id/{id}")
+//    public ResponseEntity<SeatMapDTO_v4> getSeatMapById(@PathVariable Long id) {
+//        try {
+//            SeatMapDTO_v4 seatMapDTO = seatMapService.getSeatMapById(id);
+//            return ResponseEntity.ok(seatMapDTO);
+//        } catch (Exception e) {
+//            if (e.getMessage().equals("Seat map not found")) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Trả về 404 nếu không tìm thấy
+//            } else {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//            }
+//        }
+//    }
 
 
 

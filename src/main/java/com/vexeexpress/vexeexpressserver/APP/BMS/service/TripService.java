@@ -31,35 +31,117 @@ public class TripService {
     CompanyRepository companyRepository;
     @Autowired
     SeatMapRepository seatMapRepository;
+    @Autowired
+    SeatRepository seatRepository;
+    @Autowired
+    TicketRepository ticketRepository;
 
-    public BmsTrip createTrip(TripDTO tripDTO) {
-        try {
-            BmsTrip trip = new BmsTrip();
+    public BmsTrip createTrip(TripDTO tripDTO) throws Exception {
+        System.out.println("New Data: " + tripDTO);
 
-            trip.setDateTrip(tripDTO.getDateTrip());
-            trip.setNote(tripDTO.getNote());
-            trip.setTime(tripDTO.getTime());
-            trip.setUserId(tripDTO.getUserId());
-            trip.setVehicleId(tripDTO.getVehicleId());
-            trip.setRouterId(tripDTO.getRouterId());
-            trip.setSeatMapId(tripDTO.getSeatMapId());
-
-            BmsBusCompany company = companyRepository.findById(tripDTO.getCompanyId())
-                    .orElseThrow(() -> new RuntimeException("Company not found with ID: " + tripDTO.getCompanyId()));
-            trip.setCompany(company);
-
-
-            System.out.println("Saving trip: " + trip);
-            return tripRepository.save(trip);
-
-        } catch (DataIntegrityViolationException e) {
-            System.err.println("Data integrity violation: " + e.getMessage());
-            throw new RuntimeException("Failed to create trip due to data integrity violation", e);
-        } catch (Exception e) {
-            System.err.println("Error while creating trip: " + e.getMessage());
-            throw new RuntimeException("Failed to create trip", e);
+        // Kiểm tra và lấy thông tin SeatMap
+        System.out.println("Kiểm tra seat map...");
+        Optional<BmsSeatMap> seatMapOptional = seatMapRepository.findById(tripDTO.getSeatMapId());
+        if (!seatMapOptional.isPresent()) {
+            throw new Exception("Seat map not found.");
         }
+        System.out.println("Seat map được tìm thấy: " + seatMapOptional.get().getId());
+
+        // Lấy thông tin công ty từ companyId
+        System.out.println("Kiểm tra công ty...");
+        Optional<BmsBusCompany> companyOptional = companyRepository.findById(tripDTO.getCompanyId());
+        if (!companyOptional.isPresent()) {
+            throw new Exception("Company not found.");
+        }
+        System.out.println("Công ty được tìm thấy: " + companyOptional.get().getId());
+
+        // Tạo chuyến đi
+        BmsTrip createdTrip = new BmsTrip();
+        createdTrip.setRouterId(tripDTO.getRouterId());
+        createdTrip.setDateTrip(tripDTO.getDateTrip());
+        createdTrip.setVehicleId(tripDTO.getVehicleId());
+        createdTrip.setUserId(tripDTO.getUserId());
+        createdTrip.setSeatMapId(tripDTO.getSeatMapId());
+        createdTrip.setTime(tripDTO.getTime());
+        createdTrip.setNote(tripDTO.getNote());
+        createdTrip.setCompany(companyOptional.get());
+
+        System.out.println("Tạo chuyến đi với các thông tin sau:");
+        System.out.println("Router ID: " + createdTrip.getRouterId());
+        System.out.println("Date Trip: " + createdTrip.getDateTrip());
+        System.out.println("Vehicle ID: " + createdTrip.getVehicleId());
+        System.out.println("User IDs: " + createdTrip.getUserId());
+        System.out.println("Seat Map ID: " + createdTrip.getSeatMapId());
+        System.out.println("Time: " + createdTrip.getTime());
+        System.out.println("Note: " + createdTrip.getNote());
+        System.out.println("Company ID: " + createdTrip.getCompany().getId());
+
+        // Lấy danh sách ghế và tạo vé
+        List<BmsTicket> tickets = new ArrayList<>();
+        List<BmsSeat> seats = seatRepository.findByBmsSeatMap_Id(tripDTO.getSeatMapId());
+        System.out.println("Danh sách ghế: " + seats.size() + " ghế được tìm thấy.");
+        for (BmsSeat seat : seats) {
+            System.out.println("Ghế: " + seat.getName());
+            BmsTicket ticket = new BmsTicket();
+            ticket.setSeat(seat);
+            ticket.setTrip(createdTrip);
+            tickets.add(ticket);
+        }
+        createdTrip.setTickets(tickets); // Gán danh sách vé vào chuyến đi
+
+        // Lưu chuyến đi
+        createdTrip = tripRepository.save(createdTrip); // Lưu chuyến đi vào cơ sở dữ liệu
+        System.out.println("Chuyến đi đã được lưu với ID: " + createdTrip.getId());
+
+        // Lưu tất cả vé vào cơ sở dữ liệu
+        ticketRepository.saveAll(tickets);
+        System.out.println("Tất cả vé đã được lưu thành công.");
+
+        // In ra thông tin chuyến đi đã tạo
+        System.out.println("Chuyến đi đã tạo:");
+        System.out.println("ID: " + createdTrip.getId());
+        System.out.println("Router ID: " + createdTrip.getRouterId());
+        System.out.println("Date Trip: " + createdTrip.getDateTrip());
+        System.out.println("Time: " + createdTrip.getTime());
+        System.out.println("Note: " + createdTrip.getNote());
+        System.out.println("Company: " + createdTrip.getCompany().getId());
+
+        System.out.println("Danh sách vé:");
+        for (BmsTicket ticket : tickets) {
+            System.out.println("Ticket ID: " + ticket.getId() + ", Seat: " + ticket.getSeat().getName());
+        }
+
+        return createdTrip; // Trả về chuyến đi đã tạo
     }
+
+//    public BmsTrip createTrip(TripDTO tripDTO) {
+//        try {
+//            BmsTrip trip = new BmsTrip();
+//
+//            trip.setDateTrip(tripDTO.getDateTrip());
+//            trip.setNote(tripDTO.getNote());
+//            trip.setTime(tripDTO.getTime());
+//            trip.setUserId(tripDTO.getUserId());
+//            trip.setVehicleId(tripDTO.getVehicleId());
+//            trip.setRouterId(tripDTO.getRouterId());
+//            trip.setSeatMapId(tripDTO.getSeatMapId());
+//
+//            BmsBusCompany company = companyRepository.findById(tripDTO.getCompanyId())
+//                    .orElseThrow(() -> new RuntimeException("Company not found with ID: " + tripDTO.getCompanyId()));
+//            trip.setCompany(company);
+//
+//
+//            System.out.println("Saving trip: " + trip);
+//            return tripRepository.save(trip);
+//
+//        } catch (DataIntegrityViolationException e) {
+//            System.err.println("Data integrity violation: " + e.getMessage());
+//            throw new RuntimeException("Failed to create trip due to data integrity violation", e);
+//        } catch (Exception e) {
+//            System.err.println("Error while creating trip: " + e.getMessage());
+//            throw new RuntimeException("Failed to create trip", e);
+//        }
+//    }
 
 
 

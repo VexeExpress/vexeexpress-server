@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,9 +18,7 @@ public class BmsTrip {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
-    private BmsBusCompany company;
+
 
     @Column(name = "date_trip", nullable = false)
     private LocalDate dateTrip;
@@ -41,6 +40,16 @@ public class BmsTrip {
 
     @Column(name = "user_id")
     private List<Integer> userId;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<BmsTicket> tickets;
+
+
+
 }
 
 

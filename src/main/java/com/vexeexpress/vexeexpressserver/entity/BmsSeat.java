@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class BmsSeat {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Integer floor;
