@@ -2,6 +2,7 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO_v3;
 import com.vexeexpress.vexeexpressserver.entity.*;
 import com.vexeexpress.vexeexpressserver.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -166,7 +167,7 @@ public class TripService {
                 tripDTO.setUser(null);
             }
 
-            System.out.println(tripDTO); // In ra thông tin chuyến đi
+            System.out.println(tripDTO);
             return tripDTO;
         }).collect(Collectors.toList());
     }
@@ -299,7 +300,81 @@ public class TripService {
         return tripRepository.findAll();
     }
 
+    public TripDTO_v3 getTripDetailsById(Long tripId) {
+        return tripRepository.findById(tripId)
+                .map(this::convertToTripDTO)
+                .orElse(null);
+    }
 
+    private TripDTO_v3 convertToTripDTO(BmsTrip bmsTrip) {
+        if (bmsTrip == null) {
+            return null;
+        }
+        TripDTO_v3 dto = new TripDTO_v3();
+        dto.setId(bmsTrip.getId());
+        dto.setDate(bmsTrip.getDateTrip());
+        dto.setTime(bmsTrip.getTime());
+        dto.setNote(bmsTrip.getNote());
+
+        Long routerId = bmsTrip.getRouterId();
+        if (routerId != null) {
+            Optional<BmsRouter> routerOpt = routerRepository.findById(routerId);
+            if (routerOpt.isPresent()) {
+                dto.setRouterName(routerOpt.get().getRouteName());
+            } else {
+                dto.setRouterName(null);
+            }
+        } else {
+            dto.setRouterName(null);
+        }
+
+        List<Integer> userIds = bmsTrip.getUserId();
+        System.out.println("User IDs (Integer): " + userIds);
+        List<Long> longUserIds = new ArrayList<>();
+        if (userIds != null && !userIds.isEmpty()) {
+            for (Integer id : userIds) {
+                longUserIds.add(id.longValue());
+            }
+        } else {
+            System.out.println("No User IDs found to convert.");
+        }
+        List<BmsUser> users = userRepository.findByIdIn(longUserIds);
+        System.out.println("User IDs (Long): " + longUserIds);
+        List<String> userDetails = users.stream()
+                .map(user -> user.getName() + " (" + user.getPhone() + ") ") // Combine name and phone
+                .collect(Collectors.toList());
+        dto.setUser(userDetails);
+
+        Long seatMapId = bmsTrip.getSeatMapId();
+        if(seatMapId != null) {
+            Optional<BmsSeatMap> seatMapOptional = seatMapRepository.findById(seatMapId);
+            if(seatMapOptional.isPresent()) {
+                dto.setSeatMap(seatMapOptional.get().getSeatMapName());
+            } else {
+                dto.setSeatMap(null);
+            }
+        } else {
+            dto.setSeatMap(null);
+        }
+        Long vehicleId = bmsTrip.getVehicleId();
+        if(vehicleId != null) {
+            Optional<BmsVehicle> vehicleOptional = vehicleRepository.findById(vehicleId);
+            if(vehicleOptional.isPresent()) {
+                dto.setLicensePlate(vehicleOptional.get().getLicensePlate());
+                dto.setVehcilePhone(vehicleOptional.get().getPhone());
+            } else {
+                dto.setVehcilePhone(null);
+                dto.setLicensePlate(null);
+            }
+        } else {
+            dto.setVehcilePhone(null);
+            dto.setLicensePlate(null);
+        }
+
+
+        System.out.println(dto);
+        return dto;
+    }
 
 
 //    public TripDTO_v3 getTripDetails(Long tripId) {

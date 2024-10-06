@@ -2,6 +2,7 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Trip.TripDTO_v3;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TripService;
 import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
@@ -50,6 +51,15 @@ public class TripController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null); // Return 500 Internal Server Error
+        }
+    }
+    @GetMapping("/detail/{tripId}")
+    public ResponseEntity<TripDTO_v3> tripDetail(@PathVariable Long tripId) {
+        try {
+            TripDTO_v3 tripDetails = tripService.getTripDetailsById(tripId);
+            return new ResponseEntity<>(tripDetails, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

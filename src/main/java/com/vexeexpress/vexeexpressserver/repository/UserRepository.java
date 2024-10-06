@@ -32,4 +32,5 @@ public interface UserRepository extends JpaRepository<BmsUser, Long>{
     List<BmsUser> findByIdIn(List<Long> ids);
 
     List<BmsUser> findByCompanyIdAndRole(Long companyId, int role);
+
 }
