@@ -1,15 +1,41 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Ticket.TicketDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TicketService;
+import com.vexeexpress.vexeexpressserver.entity.BmsTicket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bms/ticket")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TicketController {
     @Autowired
     private TicketService ticketService;
+
+    @GetMapping("/get-ticket-data/{tripId}")
+    public ResponseEntity<?> getTicketData(@PathVariable Long tripId) {
+        try {
+            System.out.println("Get Data Trip ID: " + tripId);
+            List<TicketDTO> ticketDTOs = ticketService.getTicketsByTripId(tripId);
+
+            if (ticketDTOs.isEmpty()) {
+                return ResponseEntity.status(404).body("No tickets found for Trip ID: " + tripId);
+            }
+
+            return ResponseEntity.ok(ticketDTOs);
+        } catch (Exception e) {
+            System.err.println("Error retrieving ticket data: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to retrieve ticket data");
+        }
+    }
+
+
+
 
 //    @PostMapping("/booking")
 //    public ResponseEntity<?> bookTickets(@RequestBody TicketDTO_v1 bookingRequest) {

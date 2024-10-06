@@ -12,4 +12,5 @@ public interface SeatMapRepository extends JpaRepository<BmsSeatMap, Long> {
 
 
     List<BmsSeatMap> findByCompanyId(Long companyId);
+
 }

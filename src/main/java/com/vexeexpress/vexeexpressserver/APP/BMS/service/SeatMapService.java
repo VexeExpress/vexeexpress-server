@@ -11,6 +11,7 @@ import com.vexeexpress.vexeexpressserver.repository.SeatRepository;
 import com.vexeexpress.vexeexpressserver.repository.TripRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -102,39 +103,57 @@ public class SeatMapService {
         }).collect(Collectors.toList());
     }
 
-    public SeatMapDTO_v2 getSeatMapByTripId(Long tripId) {
-        BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));
-        System.out.println("Trip được chọn:" + trip);
-
-        Long seatMapId = trip.getSeatMapId();
-        System.out.println("seatMapId: " + seatMapId);
-
-
-
-
-
-
-//        BmsSeatMap seatMap = seatMapRepository.findById(trip.getSeatMapId()).orElse(null);
+//    public SeatMapDTO_v2 getSeatMapByTripId(Long tripId) {
+//        BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));
+//        System.out.println("Trip được chọn:" + trip);
 //
-//        if (seatMapId == null) {
-//            return Collections.emptyList(); // Trả về danh sách rỗng
-//        }
-//        System.out.println("Sơ đồ ghế:" + seatMap);
+//        Long seatMapId = trip.getSeatMapId();
+//        System.out.println("seatMapId: " + seatMapId);
+//
+//
+//
+//
+//
+//
+////        BmsSeatMap seatMap = seatMapRepository.findById(trip.getSeatMapId()).orElse(null);
+////
+////        if (seatMapId == null) {
+////            return Collections.emptyList(); // Trả về danh sách rỗng
+////        }
+////        System.out.println("Sơ đồ ghế:" + seatMap);
+//
+//
+//        return null;
+//    }
+    public Optional<Long> getSeatMapIdFromSelectedTrip(Long tripId) {
+        if (tripId == null || tripId <= 0) {
+            throw new IllegalArgumentException("Trip ID không hợp lệ.");
+        }
+        return tripRepository.findById(tripId).map(BmsTrip::getSeatMapId);
+    }
 
+    public SeatMapDTO_v4 getSeatMapById(Long id) {
+        // Validate the ID
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID must be greater than 0");
+        }
 
+        try {
+            Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
+
+            // Check if the seat map exists
+            return seatMap.map(this::convertToDTO)
+                    .orElseThrow(() -> new EntityNotFoundException("Seat map not found with ID: " + id));
+        } catch (DataAccessException e) {
+            // Handle database access errors
+            throw new RuntimeException("Database error occurred while retrieving seat map", e);
+        }
+    }
+
+    private SeatMapDTO_v4 convertToDTO(BmsSeatMap bmsSeatMap) {
         return null;
     }
 
-//    public SeatMapDTO_v4 getSeatMapById(Long id) throws Exception {
-//        Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
-//
-//        if (seatMap.isPresent()) {
-//            // Chuyển đổi từ BmsSeatMap sang SeatMapDTO_v4
-//            return convertToDTO(seatMap.get());
-//        } else {
-//            throw new Exception("Seat map not found");
-//        }
-//    }
 
 //    public SeatMapDTO_v4 convertToDTO(BmsSeatMap seatMap) {
 //        SeatMapDTO_v4 seatMapDTO = new SeatMapDTO_v4();
@@ -164,11 +183,11 @@ public class SeatMapService {
 //        return seatMapDTO;
 //    }
 
-    public Long getSeatMapIdByTripId(Long tripId) {
-        BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));
-        System.out.println("Trip được chọn:" + trip);
-        Long seatMapId = trip.getSeatMapId();
-        System.out.println("seatMapId: " + seatMapId);
-        return trip.getSeatMapId();
-    }
+//    public Long getSeatMapIdByTripId(Long tripId) {
+//        BmsTrip trip = tripRepository.findById(tripId).orElseThrow(() -> new EntityNotFoundException("Trip not found"));
+//        System.out.println("Trip được chọn:" + trip);
+//        Long seatMapId = trip.getSeatMapId();
+//        System.out.println("seatMapId: " + seatMapId);
+//        return trip.getSeatMapId();
+//    }
 }

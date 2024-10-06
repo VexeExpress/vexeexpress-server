@@ -84,6 +84,7 @@ public class TripService {
             System.out.println("Ghế: " + seat.getName());
             BmsTicket ticket = new BmsTicket();
             ticket.setSeat(seat);
+            ticket.setRoomCode(seat.getName());
             ticket.setTrip(createdTrip);
             tickets.add(ticket);
         }
@@ -112,6 +113,62 @@ public class TripService {
         }
 
         return createdTrip; // Trả về chuyến đi đã tạo
+    }
+    public List<TripDTO_v2> searchTrips(Long companyId, LocalDate dateTrip, Long routerId) {
+        System.out.println("CompanyID: " + companyId);
+        System.out.println("Date: " + dateTrip);
+        System.out.println("RouterID: " + routerId);
+
+        long startTime = System.currentTimeMillis();
+
+        Optional<BmsBusCompany> companyOptional = companyRepository.findById(companyId);
+        if (!companyOptional.isPresent()) {
+            throw new EntityNotFoundException("Company not found");
+        }
+        BmsBusCompany company = companyOptional.get();
+        List<BmsTrip> trips = tripRepository.findByCompanyAndDateTripAndRouterId(company, dateTrip, routerId);
+
+        long duration = System.currentTimeMillis() - startTime;
+
+        System.out.println("Number of trips found: " + trips.size());
+        System.out.println("Query executed in: " + duration + " ms");
+
+        return trips.stream().map(trip -> {
+            TripDTO_v2 tripDTO = new TripDTO_v2();
+
+            tripDTO.setId(trip.getId());
+            tripDTO.setTime(trip.getTime());
+
+            Optional<BmsSeatMap> seatMapOptional = seatMapRepository.findById(trip.getSeatMapId());
+            seatMapOptional.ifPresent(seatMap -> {
+                tripDTO.setSeatMapName(seatMap.getSeatMapName());
+            });
+
+            if (trip.getVehicleId() != null) {
+                Optional<BmsVehicle> vehicleOptional = vehicleRepository.findById(trip.getVehicleId());
+                vehicleOptional.ifPresent(vehicle -> {
+                    tripDTO.setLicensePlate(vehicle.getLicensePlate());
+                });
+            } else {
+                tripDTO.setLicensePlate(null);
+            }
+
+            if (trip.getUserId() != null && !trip.getUserId().isEmpty()) {
+                List<String> userNames = new ArrayList<>();
+                List<Long> userIds = trip.getUserId().stream().map(Integer::longValue).collect(Collectors.toList());
+                List<BmsUser> users = userRepository.findAllById(userIds);
+
+                for (BmsUser user : users) {
+                    userNames.add(user.getName());
+                }
+                tripDTO.setUser(userNames);
+            } else {
+                tripDTO.setUser(null);
+            }
+
+            System.out.println(tripDTO); // In ra thông tin chuyến đi
+            return tripDTO;
+        }).collect(Collectors.toList());
     }
 
 //    public BmsTrip createTrip(TripDTO tripDTO) {
@@ -188,66 +245,8 @@ public class TripService {
 //    }
 
 
-    public List<BmsTrip> findTripsByDateAndRoute(String date, int route) {
-        return null;
-
-    }
 
 
-    public List<TripDTO_v2> searchTrips(Long companyId, LocalDate dateTrip, Long routerId) {
-        System.out.println("CompanyID: " + companyId);
-        System.out.println("Date: " + dateTrip);
-        System.out.println("RouterID: " + routerId);
-
-        long startTime = System.currentTimeMillis();
-        Optional<BmsBusCompany> companyOptional = companyRepository.findById(companyId);
-        if (!companyOptional.isPresent()) {
-            throw new EntityNotFoundException("Company not found");
-        }
-        BmsBusCompany company = companyOptional.get();
-        List<BmsTrip> trips = tripRepository.findByCompanyAndDateTripAndRouterId(company, dateTrip, routerId);
-        long duration = System.currentTimeMillis() - startTime;
-
-        System.out.println("Number of trips found: " + trips.size());
-        System.out.println("Query executed in: " + duration + " ms");
-
-        return trips.stream().map(trip -> {
-            TripDTO_v2 tripDTO = new TripDTO_v2();
-
-            tripDTO.setId(trip.getId());
-            tripDTO.setTime(trip.getTime());
-
-            Optional<BmsSeatMap> seatMapOptional = seatMapRepository.findById(trip.getSeatMapId());
-            seatMapOptional.ifPresent(seatMap -> {
-                tripDTO.setSeatMapName(seatMap.getSeatMapName());
-            });
-
-            if (trip.getVehicleId() != null) {
-                Optional<BmsVehicle> vehicleOptional = vehicleRepository.findById(trip.getVehicleId());
-                vehicleOptional.ifPresent(vehicle -> {
-                    tripDTO.setLicensePlate(vehicle.getLicensePlate());
-                });
-            } else {
-                tripDTO.setLicensePlate(null);
-            }
-
-            if (trip.getUserId() != null && !trip.getUserId().isEmpty()) {
-                List<String> userNames = new ArrayList<>();
-                List<Long> userIds = trip.getUserId().stream().map(Integer::longValue).collect(Collectors.toList());
-                List<BmsUser> users = userRepository.findAllById(userIds);
-
-                for (BmsUser user : users) {
-                    userNames.add(user.getName());
-                }
-                tripDTO.setUser(userNames);
-            } else {
-                tripDTO.setUser(null);
-            }
-
-            System.out.println(tripDTO); // In ra thông tin chuyến đi
-            return tripDTO;
-        }).collect(Collectors.toList());
-    }
 
 
 

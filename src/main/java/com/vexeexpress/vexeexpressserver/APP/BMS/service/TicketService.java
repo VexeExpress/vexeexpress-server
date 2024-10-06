@@ -1,20 +1,14 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.BmsTicketDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.TicketDTO_v1;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.Ticket.SeatUpdatePayload;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.Ticket.TicketRequest_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Ticket.TicketDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Ticket.TicketDTO_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Ticket.TicketDTO_v3;
 import com.vexeexpress.vexeexpressserver.entity.*;
 import com.vexeexpress.vexeexpressserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +24,39 @@ public class TicketService {
     @Autowired
     AgentRepository agentRepository;
 
+    public List<TicketDTO> getTicketsByTripId(Long tripId) {
+        List<BmsTicket> tickets = ticketRepository.findByTripId(tripId);
+        return tickets.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private TicketDTO convertToDTO(BmsTicket ticket) {
+        TicketDTO ticketDTO = new TicketDTO();
+        ticketDTO.setId(ticket.getId());
+
+        if (ticket.getSeat() != null) {
+            TicketDTO_v2 dto_v2 = new TicketDTO_v2();
+            dto_v2.setId(ticket.getSeat().getId());
+            dto_v2.setFloor(ticket.getSeat().getFloor());
+            dto_v2.setRow(ticket.getSeat().getRow());
+            dto_v2.setSeatColumn(ticket.getSeat().getSeatColumn());
+            dto_v2.setName(ticket.getSeat().getName());
+            dto_v2.setStatus(ticket.getSeat().getStatus());
+
+            if(ticket.getSeat().getBmsSeatMap() != null) {
+                TicketDTO_v3 dto_v3 = new TicketDTO_v3();
+                dto_v3.setId(ticket.getSeat().getBmsSeatMap().getId());
+                dto_v3.setSeatMapName(ticket.getSeat().getBmsSeatMap().getSeatMapName());
+                dto_v3.setFloor(ticket.getSeat().getBmsSeatMap().getFloor());
+                dto_v3.setRow(ticket.getSeat().getBmsSeatMap().getRow());
+                dto_v3.setSeatColumn(ticket.getSeat().getBmsSeatMap().getSeatColumn());
+
+                dto_v2.setSeatMap(dto_v3);
+
+            }
+            ticketDTO.setSeat(dto_v2);
+        }
+        return ticketDTO;
+    }
 
 
 //    public BmsTicket createTicket(BmsTicket ticket) {
