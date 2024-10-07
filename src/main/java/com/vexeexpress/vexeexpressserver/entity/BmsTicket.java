@@ -18,6 +18,11 @@ public class BmsTicket {
     @Column(name = "room_code")
     private String roomCode;
 
+    @Column(name = "selected", nullable = false)
+    private Boolean selected;
+
+
+
 //    @Column(name = "phone")
 //    private String phone;
 //
@@ -70,5 +75,9 @@ public class BmsTicket {
     @ManyToOne
     @JoinColumn(name = "trip_id", referencedColumnName = "id")
     private BmsTrip trip;
+
+    public BmsTicket() {
+        this.selected = false;
+    }
 }
 

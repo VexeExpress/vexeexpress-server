@@ -50,7 +50,7 @@ public class BmsUser {
     private LocalDate birthDate;
 
     @Column(name = "role", nullable = false)
-    private Integer role;
+    private Integer role; //1(Tài xế) // 2(Nhân viên hành chính) // 3(Quản Trị Viên)
 
     @Column(name = "license_category")
     private Integer licenseCategory;

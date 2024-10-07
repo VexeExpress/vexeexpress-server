@@ -2,9 +2,10 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Ticket.TicketDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.TicketService;
-import com.vexeexpress.vexeexpressserver.entity.BmsTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,9 @@ import java.util.List;
 public class TicketController {
     @Autowired
     private TicketService ticketService;
+
+
+
 
     @GetMapping("/get-ticket-data/{tripId}")
     public ResponseEntity<?> getTicketData(@PathVariable Long tripId) {

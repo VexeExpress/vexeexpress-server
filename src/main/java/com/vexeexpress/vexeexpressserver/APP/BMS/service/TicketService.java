@@ -6,7 +6,10 @@ import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Ticket.TicketDTO_v3;
 import com.vexeexpress.vexeexpressserver.entity.*;
 import com.vexeexpress.vexeexpressserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +26,7 @@ public class TicketService {
     OfficeRepository officeRepository;
     @Autowired
     AgentRepository agentRepository;
+
 
     public List<TicketDTO> getTicketsByTripId(Long tripId) {
         List<BmsTicket> tickets = ticketRepository.findByTripId(tripId);
@@ -56,6 +60,13 @@ public class TicketService {
             ticketDTO.setSeat(dto_v2);
         }
         return ticketDTO;
+    }
+
+    public void updateTicketSelection(Long ticketId, boolean selected) {
+        BmsTicket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found with id: " + ticketId));
+        ticket.setSelected(selected);
+        ticketRepository.save(ticket);
     }
 
 
