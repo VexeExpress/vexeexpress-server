@@ -1,15 +1,10 @@
 package com.vexeexpress.vexeexpressserver.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,41 +19,50 @@ public class BmsUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", length = 100, nullable = false)
-    private String name;
-
-    @Column(name = "email", length = 255)
-    private String email;
-
-    @Column(name = "phone", length = 13, nullable = false)
-    private String phone;
-
-    @Column(name = "status", length = 1, nullable = false)
-    private String status;
-
-    @Column(name = "birth")
-    private Date birth;
-
-    @Column(name = "gender", length = 6, nullable = false)
-    private String gender;
-
-    @Column(name = "role",  length = 1, nullable = false)
-    private String role;
-
     @Column(name = "username", length = 50, nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "company_id", nullable = false)
-    private Long companyId;
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
+    @Column(name = "name", length = 100, nullable = false)
+    private String name;
+
+    @Column(name = "phone", length = 13, nullable = false)
+    private String phone;
+
+    @Column(name = "address", length = 255)
+    private String address;
+
+    @Column(name = "email", length = 255)
+    private String email;
+
+    @Column(name = "cccd", length = 30)
+    private String cccd;
+
+    @Column(name = "gender", nullable = false)
+    private Integer gender;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
+    @Column(name = "role", nullable = false)
+    private Integer role; //1(Tài xế) // 2(Nhân viên hành chính) // 3(Quản Trị Viên)
+
+    @Column(name = "license_category")
+    private Integer licenseCategory;
+
+    @Column(name = "expiration_date")
+    private LocalDate expirationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
     private LocalDate createdAt;
-
-    public BmsUser(){
-        
-    }
 }

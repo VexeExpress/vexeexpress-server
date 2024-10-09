@@ -12,4 +12,8 @@ public class TicketRequest {
     private String notes;
     private String price;
     private String tripId;
+<<<<<<< HEAD
 } 
+=======
+}
+>>>>>>> 5fd1ecb917d5307c412ce92c5dc6a709709352f6

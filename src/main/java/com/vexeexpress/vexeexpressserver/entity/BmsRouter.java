@@ -11,19 +11,23 @@ public class BmsRouter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", length = 200, nullable = false)
-    private String name;
+    @Column(name = "route_name", length = 200, nullable = false)
+    private String routeName;
 
-    @Column(name = "short_name", length = 100, nullable = false)
-    private String shortName;
+    @Column(name = "route_name_short", length = 100, nullable = false)
+    private String routeNameShort;
 
-    @Column(name = "price", length = 100, nullable = false)
-    private Double price;
+    @Column(name = "display_price", length = 100, nullable = false)
+    private Double displayPrice;
 
     @Column(name = "note")
     private String note;
 
-    @Column(name = "company_id", nullable = false)
-    private String companyId;
+    @Column(name = "status")
+    private Boolean status;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 
 }

@@ -2,9 +2,12 @@ package com.vexeexpress.vexeexpressserver.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,30 +18,38 @@ public class BmsTrip {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "company_id", nullable = false)
-    private String companyId;
 
-    @Column(name = "valueChairDiagram", nullable = false)
-    private String valueChairDiagram;
 
-    @Column(name = "valueDayDeparture", nullable = false)
-    private LocalDate valueDayDeparture;
+    @Column(name = "date_trip", nullable = false)
+    private LocalDate dateTrip;
 
-    @Column(name = "valueTimeDeparture", nullable = false)
-    private LocalTime valueTimeDeparture;
+    @Column(name = "time", nullable = false)
+    private LocalTime time;
 
-    @Column(name = "valueVehicle")
-    private String valueVehicle;
+    @Column(name = "vehicle_id", nullable = true)
+    private Long vehicleId;
 
-    @Column(name = "valueRouter", nullable = false)
-    private String valueRouter;
+    @Column(name = "router_id", nullable = false)
+    private Long routerId;
 
-    @Column(name = "valueNote")
-    private String valueNote;
+    @Column(name = "seat_map_id", nullable = false)
+    private Long seatMapId;
 
-    @Column(name = "valueDriver")
-    private List<Integer> valueDriver;
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "user_id")
+    private List<Integer> userId;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<BmsTicket> tickets;
 
 
 
 }
+
+

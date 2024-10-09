@@ -29,8 +29,12 @@ public class BmsAgent {
     @Column(name = "discount")
     private Double discount;
 
-    @Column(name = "company_id", nullable = false)
-    private String companyId;
+    @Column(name = "note")
+    private String note;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

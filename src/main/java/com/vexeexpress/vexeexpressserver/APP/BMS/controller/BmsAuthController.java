@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +22,25 @@ import com.vexeexpress.vexeexpressserver.APP.BMS.libs.ReturnMessage;
 
 @RestController
 @RequestMapping("/bms/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BmsAuthController {
     @Autowired
     BmsAuthService bmsAuthService;
     
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
-        System.out.println(loginForm);
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
-        return bmsAuthService.login(username, password);
+
+        try {
+            // Gọi phương thức login từ BmsAuthService
+            ResponseEntity<?> response = bmsAuthService.login(username, password);
+            return response; // Trả về phản hồi từ service
+        } catch (Exception e) {
+            // Xử lý ngoại lệ và trả về phản hồi lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Đã xảy ra lỗi trong quá trình đăng nhập: " + e.getMessage());
+        }
     }
 
 //    @GetMapping("/check-login")

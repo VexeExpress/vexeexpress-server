@@ -29,6 +29,7 @@ public class BmsVehicle {
     @Column(name = "note", length = 200)
     private String note;
 
-    @Column(name = "company_id", nullable = false)
-    private String companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private BmsBusCompany company;
 }
