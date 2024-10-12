@@ -1,5 +1,6 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.DTO;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Office;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.CompanyDTO;
 import lombok.Data;
 
 @Data

@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.utils;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Auth;
 
 import lombok.Data;
 

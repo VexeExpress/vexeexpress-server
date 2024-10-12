@@ -1,8 +1,9 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.libs.ErrorMessage;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.JwtUtils;
-import com.vexeexpress.vexeexpressserver.entity.BmsAgent;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Auth.DataLogin;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Auth.LoginForm;
+import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
+import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +12,14 @@ import org.springframework.stereotype.Service;
 import com.vexeexpress.vexeexpressserver.entity.BmsUser;
 import com.vexeexpress.vexeexpressserver.repository.UserRepository;
 
-import static com.vexeexpress.vexeexpressserver.APP.BMS.utils.JwtUtils.CheckValidLoginToken;
-
 @Service
-public class BmsAuthService {
+public class AuthService {
     @Autowired
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    CompanyRepository companyRepository;
 
     public ResponseEntity<?> login(String username, String password) {
 
@@ -58,4 +59,24 @@ public class BmsAuthService {
         }
     }
 
+    public DataLogin login_v2(LoginForm loginForm) {
+        BmsUser user = userRepository.findByUsername(loginForm.getUsername());
+        if (user == null) {
+            return null; // 404
+        }
+        if (!passwordEncoder.matches(loginForm.getPassword(), user.getPassword())) {
+            throw new IllegalStateException("Invalid password");
+        }
+        if (!user.getStatus()) {
+            throw new IllegalStateException("User is not active");
+        }
+        if (!user.getCompany().getStatus()) {
+            throw new IllegalStateException("Company is not active");
+        }
+        DataLogin dataLogin = new DataLogin();
+        dataLogin.setId(user.getId());
+        dataLogin.setName(user.getName());
+        dataLogin.setCompanyId(user.getCompany().getId());
+        return dataLogin;
+    }
 }

@@ -1,7 +1,8 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.CompanyDTO;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.OfficeDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Office.OfficeDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Office.OfficeDTO_v2;
 import com.vexeexpress.vexeexpressserver.entity.BmsOffice;
 import com.vexeexpress.vexeexpressserver.repository.BmsOfficeRepository;
 
@@ -25,16 +26,16 @@ public class OfficeService {
         return bmsOfficeRepository.save(bmsOffice);
     }
 
-    public List<OfficeDTO> getOfficesByCompanyId(Long companyId) {
-        List<BmsOffice> offices = officeRepository.findByCompanyId(companyId);
-
-        if (offices == null || offices.isEmpty()) {
-            throw new EntityNotFoundException("No offices found for companyId: " + companyId);
-        }
-
-        // Convert entities to DTOs
-        return offices.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
+//    public List<OfficeDTO> getOfficesByCompanyId(Long companyId) {
+//        List<BmsOffice> offices = officeRepository.findByCompanyId(companyId);
+//
+//        if (offices == null || offices.isEmpty()) {
+//            throw new EntityNotFoundException("No offices found for companyId: " + companyId);
+//        }
+//
+//        // Convert entities to DTOs
+//        return offices.stream().map(this::convertToDTO).collect(Collectors.toList());
+//    }
 
     private OfficeDTO convertToDTO(BmsOffice office) {
         OfficeDTO dto = new OfficeDTO();
@@ -78,4 +79,22 @@ public class OfficeService {
     }
 
 
+    public List<OfficeDTO_v2> getOfficesByCompanyId(Long companyId) {
+        // 404
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId must not be null");
+        }
+        List<BmsOffice> offices = officeRepository.findByCompanyId(companyId);
+        //204
+        if(offices == null || offices.isEmpty()) {
+            return null;
+        }
+        return offices.stream().map(this::convertToDTO_v2).collect(Collectors.toList());
+    }
+    private OfficeDTO_v2 convertToDTO_v2(BmsOffice office) {
+        OfficeDTO_v2 dto = new OfficeDTO_v2();
+        dto.setId(office.getId());
+        dto.setName(office.getName());
+        return dto;
+    }
 }

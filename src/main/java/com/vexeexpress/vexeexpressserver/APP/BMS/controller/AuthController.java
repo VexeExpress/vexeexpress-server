@@ -1,31 +1,25 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.JwtUtils;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Auth.DataLogin;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.service.BmsAuthService;
-import com.vexeexpress.vexeexpressserver.APP.BMS.utils.LoginForm;
+import com.vexeexpress.vexeexpressserver.APP.BMS.service.AuthService;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Auth.LoginForm;
 
-import java.util.Objects;
-
-import com.vexeexpress.vexeexpressserver.APP.BMS.libs.ErrorMessage;
 import com.vexeexpress.vexeexpressserver.APP.BMS.libs.ReturnMessage;
 
 
 @RestController
 @RequestMapping("/bms/auth")
 @CrossOrigin(origins = "http://localhost:3000")
-public class BmsAuthController {
+public class AuthController {
     @Autowired
-    BmsAuthService bmsAuthService;
+    AuthService authService;
     
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
@@ -34,7 +28,7 @@ public class BmsAuthController {
 
         try {
             // Gọi phương thức login từ BmsAuthService
-            ResponseEntity<?> response = bmsAuthService.login(username, password);
+            ResponseEntity<?> response = authService.login(username, password);
             return response; // Trả về phản hồi từ service
         } catch (Exception e) {
             // Xử lý ngoại lệ và trả về phản hồi lỗi
@@ -42,6 +36,36 @@ public class BmsAuthController {
                     .body("Đã xảy ra lỗi trong quá trình đăng nhập: " + e.getMessage());
         }
     }
+
+    @PostMapping("/login-2")
+    public ResponseEntity<DataLogin> login_v2(@RequestBody LoginForm loginForm) {
+        try {
+            DataLogin dataLogin = authService.login_v2(loginForm);
+
+            if (dataLogin == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 - Không tìm thấy người dùng
+            }
+
+            return ResponseEntity.ok(dataLogin); // 200 - Thành công
+
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("Invalid password")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401 - Mật khẩu không đúng
+            }
+            if (e.getMessage().equals("User is not active")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403 - Người dùng bị khóa
+            } else if (e.getMessage().equals("Company is not active")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403 - Công ty bị khóa
+            }
+
+            // Trường hợp ngoại lệ khác
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 - Lỗi server
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 - Lỗi server
+        }
+    }
+
+
 
 //    @GetMapping("/check-login")
 //    public ResponseEntity<?> CheckLogin(HttpServletRequest request) {

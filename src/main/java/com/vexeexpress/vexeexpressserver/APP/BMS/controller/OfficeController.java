@@ -1,6 +1,7 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.OfficeDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Office.OfficeDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Office.OfficeDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.OfficeService;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
@@ -22,22 +23,23 @@ public class OfficeController {
     @Autowired
     CompanyService companyService;
 
-    // Hiện danh sách văn phòng dựa theo companyId
     @GetMapping("/offices/{companyId}")
     public ResponseEntity<?> getOfficesByCompanyId(@PathVariable Long companyId) {
         try {
-            List<OfficeDTO> offices = officeService.getOfficesByCompanyId(companyId);
+            List<OfficeDTO_v2> offices = officeService.getOfficesByCompanyId(companyId);
 
-            if (offices.isEmpty()) {
-                return ResponseEntity.noContent().build();
+            if (offices == null || offices.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
             }
-
-            return ResponseEntity.ok(offices);
+            return ResponseEntity.ok(offices); // 200 OK
+        } catch (IllegalArgumentException e) {
+            // Xử lý khi companyId không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            // CompanyId null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi máy chủ nội bộ");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
 
