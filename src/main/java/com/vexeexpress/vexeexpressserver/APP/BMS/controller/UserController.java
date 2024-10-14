@@ -1,9 +1,11 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Office.OfficeDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User.UserDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.UserDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,26 @@ public class UserController {
     UserService userService;
     @Autowired
     CompanyService companyService;
+
+    @GetMapping("/users/{companyId}")
+    public ResponseEntity<?> getListUserByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<UserDTO> users = userService.getListUserByCompanyId(companyId);
+
+            if (users == null || users.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+            }
+            return ResponseEntity.ok(users); // 200 OK
+        } catch (IllegalArgumentException e) {
+            // Xử lý khi companyId không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
+        } catch (EntityNotFoundException e) {
+            // CompanyId null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
+    }
 
     @GetMapping("/get-name-user/{id}")
     public ResponseEntity<?> getNameUser(@PathVariable Long id) {

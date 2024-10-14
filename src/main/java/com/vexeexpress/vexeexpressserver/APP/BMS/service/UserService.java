@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User.UserDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.UserDTO;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
+import com.vexeexpress.vexeexpressserver.entity.BmsOffice;
 import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -167,5 +168,34 @@ public class UserService {
             dto.setName(entity.getName());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    /////
+    public List<UserDTO> getListUserByCompanyId(Long companyId) {
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId must not be null");
+        }
+        List<BmsUser> users = userRepository.findByCompanyId(companyId);
+        if(users == null || users.isEmpty()) {
+            return null;
+        }
+        return users.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+    private UserDTO convertToDTO(BmsUser user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setCccd(user.getCccd());
+        dto.setPhone(user.getPhone());
+        dto.setAddress(user.getAddress());
+        dto.setBirthDate(user.getBirthDate());
+        dto.setExpirationDate(user.getExpirationDate());
+        dto.setRole(user.getRole());
+        dto.setGender(user.getGender());
+        dto.setUsername(user.getUsername());
+        dto.setLicenseCategory(user.getLicenseCategory());
+        dto.setStatus(user.getStatus());
+        dto.setName(user.getName());
+        return dto;
     }
 }
