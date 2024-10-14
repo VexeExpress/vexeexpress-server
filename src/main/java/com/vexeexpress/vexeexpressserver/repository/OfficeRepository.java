@@ -12,4 +12,6 @@ public interface OfficeRepository extends JpaRepository<BmsOffice, Long> {
 
 
     boolean existsByNameAndCompanyId(String name, Long companyId);
+
+    boolean existsByNameAndCompany_Id(String name, Long companyId);
 }
