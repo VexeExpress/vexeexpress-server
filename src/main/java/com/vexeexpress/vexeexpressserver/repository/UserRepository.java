@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<BmsUser, Long>{
     BmsUser findByUsername(String username);
     List<BmsUser> findByCompanyId(Long companyId);
 
-    boolean existsByUsername(String username);
+//    boolean existsByUsername(String username);
 
     List<BmsUser> findAllByCompanyId(Long companyId);
 
@@ -33,4 +33,5 @@ public interface UserRepository extends JpaRepository<BmsUser, Long>{
 
     List<BmsUser> findByCompanyIdAndRole(Long companyId, int role);
 
+    boolean existsByUsernameAndCompany_Id(String username, Long companyId);
 }

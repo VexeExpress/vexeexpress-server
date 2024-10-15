@@ -14,8 +14,7 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class CompanyService {
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     CompanyRepository companyRepository;
 

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class UserDTO {
     private Long id;
     private String name;
+    private String username;
     private String address;
     private LocalDate birthDate;
     private String cccd;
@@ -18,4 +19,6 @@ public class UserDTO {
     private String phone;
     private Integer role;
     private Boolean status;
+    private Long companyId;
+    private String password;
 }

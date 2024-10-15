@@ -5,14 +5,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User.UserDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User.UserDTO_v2;
-import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.UserDTO;
+import com.vexeexpress.vexeexpressserver.config.SecurityConfig;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
 import com.vexeexpress.vexeexpressserver.entity.BmsOffice;
 import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vexeexpress.vexeexpressserver.entity.BmsUser;
@@ -22,6 +22,11 @@ import com.vexeexpress.vexeexpressserver.repository.UserRepository;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
+
+
 
 
     public String getNameUserById(Long id) {
@@ -59,32 +64,32 @@ public class UserService {
         return new BCryptPasswordEncoder().encode(password);
     }
 
-    public List<UserDTO> getUsersByCompanyId(Long companyId) {
-        // Fetch the list of users by company ID
-        List<BmsUser> users = userRepository.findByCompanyId(companyId);
-
-        // Map the list of users to BmsUserDTO without using a separate mapping method
-        List<UserDTO> userDTOs = users.stream()
-                .map(user -> {
-                    UserDTO dto = new UserDTO();
-                    dto.setId(user.getId());
-                    dto.setUsername(user.getUsername());
-                    dto.setName(user.getName());
-                    dto.setPhone(user.getPhone());
-                    dto.setAddress(user.getAddress());
-                    dto.setEmail(user.getEmail());
-                    dto.setCccd(user.getCccd());
-                    dto.setGender(user.getGender());
-                    dto.setBirthDate(user.getBirthDate());
-                    dto.setRole(user.getRole());
-                    dto.setLicenseCategory(user.getLicenseCategory());
-                    dto.setExpirationDate(user.getExpirationDate());
-                    dto.setStatus(user.getStatus());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return userDTOs;
-    }
+//    public List<UserDTO> getUsersByCompanyId(Long companyId) {
+//        // Fetch the list of users by company ID
+//        List<BmsUser> users = userRepository.findByCompanyId(companyId);
+//
+//        // Map the list of users to BmsUserDTO without using a separate mapping method
+//        List<UserDTO> userDTOs = users.stream()
+//                .map(user -> {
+//                    UserDTO dto = new UserDTO();
+//                    dto.setId(user.getId());
+//                    dto.setUsername(user.getUsername());
+//                    dto.setName(user.getName());
+//                    dto.setPhone(user.getPhone());
+//                    dto.setAddress(user.getAddress());
+//                    dto.setEmail(user.getEmail());
+//                    dto.setCccd(user.getCccd());
+//                    dto.setGender(user.getGender());
+//                    dto.setBirthDate(user.getBirthDate());
+//                    dto.setRole(user.getRole());
+//                    dto.setLicenseCategory(user.getLicenseCategory());
+//                    dto.setExpirationDate(user.getExpirationDate());
+//                    dto.setStatus(user.getStatus());
+//                    return dto;
+//                })
+//                .collect(Collectors.toList());
+//        return userDTOs;
+//    }
 
     public void deleteUser(Long id) throws Exception {
         if (userRepository.existsById(id)) {
@@ -123,9 +128,9 @@ public class UserService {
         return user.getName();
     }
 
-    public boolean usernameExists(String username) {
-        return userRepository.existsByUsername(username);
-    }
+//    public boolean usernameExists(String username) {
+//        return userRepository.existsByUsername(username);
+//    }
 
     public List<BmsUser> getAllUsersByCompanyId(Long companyId) {
         return userRepository.findAllByCompanyId(companyId);
@@ -143,22 +148,9 @@ public class UserService {
         return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
-    public BmsUser lockUser(Long id) throws Exception {
-        Optional<BmsUser> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            BmsUser user = optionalUser.get();
-            user.setStatus(false);
-            return userRepository.save(user);
-        } else {
-            throw new Exception("User not found with ID: " + id);
-        }
-    }
 
-    public void changePassword(Long id, String newPassword) {
-        BmsUser user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setPassword(hashPassword(newPassword));
-        userRepository.save(user);
-    }
+
+
 
     public List<UserDTO_v2> getNameUserByCompanyId(Long companyId) {
         List<BmsUser> users = userRepository.findByCompanyIdAndRole(companyId, 1);
@@ -197,5 +189,76 @@ public class UserService {
         dto.setStatus(user.getStatus());
         dto.setName(user.getName());
         return dto;
+    }
+
+    public BmsUser createUser_v2(UserDTO dto) {
+        System.out.println(dto);
+        Optional<BmsBusCompany> companyOpt = companyRepository.findById(dto.getCompanyId());
+        if (companyOpt.isEmpty()) {
+            throw new IllegalArgumentException("Company ID không hợp lệ.");
+        }
+        if (userRepository.existsByUsernameAndCompany_Id(dto.getUsername(), dto.getCompanyId())) {
+            throw new IllegalArgumentException("Tên tài khoản đã tồn tại trong công ty này.");
+        }
+        BmsUser user = new BmsUser();
+        user.setName(dto.getName());
+        user.setUsername(dto.getUsername());
+        user.setGender(dto.getGender());
+        user.setExpirationDate(dto.getExpirationDate());
+        user.setLicenseCategory(dto.getLicenseCategory());
+        user.setCccd(dto.getCccd());
+        user.setBirthDate(dto.getBirthDate());
+        user.setEmail(dto.getEmail());
+        user.setCompany(companyOpt.get());
+        user.setRole(dto.getRole());
+        user.setStatus(dto.getStatus());
+        user.setPhone(dto.getPhone());
+        user.setAddress(dto.getAddress());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setPassword(encodedPassword);
+
+        return userRepository.save(user);
+    }
+
+    public BmsUser updateUser_v2(Long id, UserDTO dto) {
+        Optional<BmsUser> optionalBmsUser = userRepository.findById(id);
+        if (userRepository.existsByUsernameAndCompany_Id(dto.getUsername(), dto.getCompanyId())) {
+            throw new IllegalArgumentException("Tên tài khoản đã tồn tại trong công ty này.");
+        }
+        if (optionalBmsUser.isPresent()) {
+            BmsUser user = optionalBmsUser.get();
+            user.setName(dto.getName());
+            user.setUsername(dto.getUsername());
+            user.setGender(dto.getGender());
+            user.setExpirationDate(dto.getExpirationDate());
+            user.setLicenseCategory(dto.getLicenseCategory());
+            user.setCccd(dto.getCccd());
+            user.setBirthDate(dto.getBirthDate());
+            user.setEmail(dto.getEmail());
+            user.setRole(dto.getRole());
+            user.setStatus(dto.getStatus());
+            user.setPhone(dto.getPhone());
+            user.setAddress(dto.getAddress());
+            return userRepository.save(user);
+        } else {
+            return null;
+        }
+    }
+    public BmsUser lockUser(Long id) throws Exception {
+        Optional<BmsUser> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            BmsUser user = optionalUser.get();
+            user.setStatus(false);
+            return userRepository.save(user);
+        } else {
+            throw new Exception("User not found with ID: " + id);
+        }
+    }
+    public void changePassword(Long id, String newPassword) {
+        BmsUser user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(hashPassword(newPassword));
+        userRepository.save(user);
     }
 }
