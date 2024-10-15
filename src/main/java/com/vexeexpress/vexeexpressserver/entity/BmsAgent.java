@@ -26,15 +26,16 @@ public class BmsAgent {
     @Column(name = "address", length = 200)
     private String address;
 
-    @Column(name = "discount")
-    private Double discount;
-
     @Column(name = "note")
     private String note;
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
     private BmsBusCompany company;
+
+    @ManyToOne
+    @JoinColumn(name = "level_agency_id", referencedColumnName = "id", nullable = false)
+    private BmsLevelAgency levelAgency;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

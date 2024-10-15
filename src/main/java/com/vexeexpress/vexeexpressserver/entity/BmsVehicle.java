@@ -3,6 +3,8 @@ package com.vexeexpress.vexeexpressserver.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "bms_vehicle")
 @Data
@@ -24,10 +26,19 @@ public class BmsVehicle {
     private String color;
 
     @Column(name = "category", length = 50)
-    private String category;
+    private Integer category;
 
-    @Column(name = "note", length = 200)
-    private String note;
+    @Column(name = "chassis_number", length = 50)
+    private String chassisNumber;
+
+    @Column(name = "machine_number", length = 50)
+    private String machineNumber;
+
+    @Column(name = "registration_deadline", length = 200)
+    private LocalDate registrationDeadline;
+
+    @Column(name = "insurance_term", length = 200)
+    private LocalDate insuranceTerm;
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)

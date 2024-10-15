@@ -10,4 +10,8 @@ import java.util.Optional;
 @Repository
 public interface LevelAgencyRepository extends JpaRepository<BmsLevelAgency, Long> {
     List<BmsLevelAgency> findByCompanyId(Long companyId);
+
+    boolean existsByLevelNameAndCompany_Id(String levelName, Long companyId);
+
+    boolean existsByLevelNameAndCompany_IdAndIdNot(String levelName, Long companyId, Long id);
 }

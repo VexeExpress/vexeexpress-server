@@ -47,7 +47,7 @@ public class UserController {
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        } catch (Exception e) {
+        }  catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -87,6 +87,16 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error changing password");
+        }
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        System.out.println(id);
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -186,16 +196,7 @@ public class UserController {
 //        return userService.getUsersByCompanyId(companyId);
 //    }
 //    // Xoá nhân viên
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-//        System.out.println(id);
-//        try {
-//            userService.deleteUser(id);
-//            return ResponseEntity.noContent().build();
-//        } catch (Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+
 
 //    @PutMapping("/update-user/{id}")
 //    public ResponseEntity<BmsUser> updateUser(@PathVariable Long id, @RequestBody BmsUser updatedUser) {

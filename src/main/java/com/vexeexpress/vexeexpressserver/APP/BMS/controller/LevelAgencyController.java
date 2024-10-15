@@ -2,8 +2,10 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.LevelAgency.LevelAgencyDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.LevelAgency.LevelAgencyDTO_v2;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Vehicle.VehicleDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.LevelAgencyService;
 import com.vexeexpress.vexeexpressserver.entity.BmsLevelAgency;
+import com.vexeexpress.vexeexpressserver.entity.BmsVehicle;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,49 +21,57 @@ public class LevelAgencyController {
     @Autowired
     LevelAgencyService levelAgencyService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createLevelAgency(@RequestBody LevelAgencyDTO levelAgencyDTO) {
+    @GetMapping("/list-level-agency/{companyId}")
+    public ResponseEntity<?> getListLevelAgencyDetailByCompanyId(@PathVariable Long companyId) {
         try {
-            levelAgencyService.createLevelAgency(levelAgencyDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            List<LevelAgencyDTO> levelAgency = levelAgencyService.getListLevelAgencyDetailByCompanyId(companyId);
+
+            if (levelAgency == null || levelAgency.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+            }
+            return ResponseEntity.ok(levelAgency); // 200 OK
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            // Xử lý khi companyId không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
+        } catch (EntityNotFoundException e) {
+            // CompanyId null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
-    @GetMapping("/get-list-level-agency/{companyId}")
-    public ResponseEntity<List<LevelAgencyDTO_v2>> getLevelAgenciesByCompanyId(@PathVariable Long companyId) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createLevelAgency_2(@RequestBody LevelAgencyDTO dto) {
         try {
-            List<LevelAgencyDTO_v2> levelAgencies = levelAgencyService.getLevelAgenciesByCompanyId(companyId);
-            System.out.println(levelAgencies);
-            return ResponseEntity.ok(levelAgencies);
+            BmsLevelAgency levelAgency = levelAgencyService.createLevelAgency_2(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(levelAgency);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            System.err.println("Error fetching level agencies: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<LevelAgencyDTO> updateLevelAgency(@PathVariable Long id, @RequestBody LevelAgencyDTO levelAgencyDTO) {
-        levelAgencyDTO.setId(id);
+    public ResponseEntity<?> updateLevelAgency_v2(@PathVariable Long id, @RequestBody LevelAgencyDTO dto) {
         try {
-            LevelAgencyDTO updatedLevelAgency = levelAgencyService.updateLevelAgency(levelAgencyDTO);
-            return ResponseEntity.ok(updatedLevelAgency);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Không tìm thấy
+            BmsLevelAgency levelAgency = levelAgencyService.updateLevelAgency_v2(id, dto);
+            if (levelAgency != null) {
+                return ResponseEntity.ok(levelAgency);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Lỗi server
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteLevelAgency(@PathVariable Long id) {
+        System.out.println(id);
         try {
             levelAgencyService.deleteLevelAgency(id);
-            return ResponseEntity.noContent().build(); // Trả về mã 204 No Content
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Trả về 404
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Lỗi server
+            return ResponseEntity.notFound().build();
         }
     }
 }

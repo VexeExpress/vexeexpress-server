@@ -91,13 +91,7 @@ public class UserService {
 //        return userDTOs;
 //    }
 
-    public void deleteUser(Long id) throws Exception {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        } else {
-            throw new Exception("User not found");
-        }
-    }
+
     public BmsUser updateUser(Long id, BmsUser updatedUser) {
         return userRepository.findById(id)
                 .map(user -> {
@@ -223,29 +217,60 @@ public class UserService {
     }
 
     public BmsUser updateUser_v2(Long id, UserDTO dto) {
+        System.out.println("Bắt đầu cập nhật người dùng với ID: " + id);
+        System.out.println("Kiểm tra dữ liệu của UserDTO:" + dto);
+
+        // Tìm người dùng hiện tại theo ID
         Optional<BmsUser> optionalBmsUser = userRepository.findById(id);
-        if (userRepository.existsByUsernameAndCompany_Id(dto.getUsername(), dto.getCompanyId())) {
-            throw new IllegalArgumentException("Tên tài khoản đã tồn tại trong công ty này.");
-        }
+        System.out.println("Kết quả tìm kiếm người dùng: " + optionalBmsUser.isPresent());
+
+        // Nếu người dùng tồn tại
         if (optionalBmsUser.isPresent()) {
-            BmsUser user = optionalBmsUser.get();
-            user.setName(dto.getName());
-            user.setUsername(dto.getUsername());
-            user.setGender(dto.getGender());
-            user.setExpirationDate(dto.getExpirationDate());
-            user.setLicenseCategory(dto.getLicenseCategory());
-            user.setCccd(dto.getCccd());
-            user.setBirthDate(dto.getBirthDate());
-            user.setEmail(dto.getEmail());
-            user.setRole(dto.getRole());
-            user.setStatus(dto.getStatus());
-            user.setPhone(dto.getPhone());
-            user.setAddress(dto.getAddress());
-            return userRepository.save(user);
+            BmsUser currentUser = optionalBmsUser.get();
+            System.out.println("Người dùng hiện tại: " + currentUser.getUsername());
+
+            // Kiểm tra nếu companyId hợp lệ
+            Optional<BmsBusCompany> companyOpt = companyRepository.findById(dto.getCompanyId());
+            if (companyOpt.isEmpty()) {
+                throw new IllegalArgumentException("Company ID không hợp lệ.");
+            }
+
+            // Kiểm tra nếu có tài khoản khác (khác ID hiện tại) đã sử dụng username này trong công ty
+            boolean usernameExists = userRepository.existsByUsernameAndCompany_IdAndIdNot(dto.getUsername(), dto.getCompanyId(), currentUser.getId());
+            System.out.println("Kiểm tra tồn tại tên tài khoản: " + dto.getUsername() + ", công ty: " + dto.getCompanyId() + ", ID hiện tại: " + currentUser.getId());
+            System.out.println("Kết quả kiểm tra: " + usernameExists);
+
+            if (usernameExists) {
+                System.out.println("Tên tài khoản '" + dto.getUsername() + "' đã tồn tại trong công ty: " + dto.getCompanyId());
+                return null; // Trả về null nếu tên tài khoản đã tồn tại
+            }
+
+            // Cập nhật thông tin người dùng
+            currentUser.setName(dto.getName());
+            currentUser.setUsername(dto.getUsername());
+            currentUser.setGender(dto.getGender());
+            currentUser.setExpirationDate(dto.getExpirationDate());
+            currentUser.setLicenseCategory(dto.getLicenseCategory());
+            currentUser.setCccd(dto.getCccd());
+            currentUser.setBirthDate(dto.getBirthDate());
+            currentUser.setEmail(dto.getEmail());
+            currentUser.setRole(dto.getRole());
+            currentUser.setStatus(dto.getStatus());
+            currentUser.setPhone(dto.getPhone());
+            currentUser.setAddress(dto.getAddress());
+
+            System.out.println("Cập nhật người dùng thành công, chuẩn bị lưu.");
+            return userRepository.save(currentUser);
         } else {
+            System.out.println("Không tìm thấy người dùng với ID: " + id);
             return null;
         }
     }
+
+
+
+
+
     public BmsUser lockUser(Long id) throws Exception {
         Optional<BmsUser> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -260,5 +285,12 @@ public class UserService {
         BmsUser user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setPassword(hashPassword(newPassword));
         userRepository.save(user);
+    }
+    public void deleteUser(Long id) throws Exception {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new Exception("User not found");
+        }
     }
 }

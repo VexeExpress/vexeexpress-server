@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.DTO;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Agency;
 
 import lombok.Data;
 
@@ -10,8 +10,8 @@ public class AgentDTO {
     private String phone;
     private String email;
     private String address;
-    private Double discount;
     private String note;
     private Long companyId;
     private Date createdAt;
+    private Long levelAgencyId;
 }

@@ -1,5 +1,6 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.User;
 
+import com.vexeexpress.vexeexpressserver.entity.BmsUser;
 import lombok.Data;
 
 import java.time.LocalDate;

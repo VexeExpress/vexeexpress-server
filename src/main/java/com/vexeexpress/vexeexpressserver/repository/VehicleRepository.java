@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface VehicleRepository extends JpaRepository<BmsVehicle, Long> {
     List<BmsVehicle> findByCompanyId(Long companyId);
 
+    boolean existsByLicensePlateAndCompany_Id(String licensePlate, Long companyId);
+
+    boolean existsByLicensePlateAndCompany_IdAndIdNot(String licensePlate, Long companyId, Long id);
 }
