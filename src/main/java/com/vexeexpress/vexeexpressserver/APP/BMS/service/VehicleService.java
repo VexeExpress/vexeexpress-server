@@ -36,24 +36,6 @@ public class VehicleService {
     }
 
 
-    // Cập nhật thông tin phương tiện theo id
-    public BmsVehicle updateVehicle(BmsVehicle bmsVehicle) {
-        return vehicleRepository.save(bmsVehicle);
-    }
-
-    // Xóa phương tiện
-    public String deleteVehicle(Long id) {
-        if (vehicleRepository.existsById(id)) {
-            vehicleRepository.deleteById(id);
-            return "Vehicle with id " + id + " has been deleted.";
-        } else {
-            throw new IllegalArgumentException("Vehicle not found with id: " + id);
-        }
-    }
-
-    public BmsVehicle getVehicleById(Long vehicleId) {
-        return vehicleRepository.findById(vehicleId).orElse(null);
-    }
 
     public List<VehicleDTO_v3> getVehicleNameByCompanyId(Long companyId) {
         List<BmsVehicle> vehicles = vehicleRepository.findByCompanyId(companyId);
@@ -147,7 +129,7 @@ public class VehicleService {
         }
     }
 
-    public void deleteUser_v2(Long id) throws Exception {
+    public void deleteVehicle_v2(Long id) throws Exception {
         if (vehicleRepository.existsById(id)) {
             vehicleRepository.deleteById(id);
         } else {

@@ -1,4 +1,4 @@
-package com.vexeexpress.vexeexpressserver.APP.BMS.DTO;
+package com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router;
 
 import lombok.Data;
 
@@ -8,9 +8,7 @@ public class RouterDTO {
     private String routeName;
     private String routeNameShort;
     private Double displayPrice;
-    private String note;
     private Boolean status;
-
-
-
+    private String note;
+    private Long companyId;
 }

@@ -114,10 +114,10 @@ public class VehicleController {
         }
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVehicle_v2(@PathVariable Long id) {
         System.out.println(id);
         try {
-            vehicleService.deleteUser_v2(id);
+            vehicleService.deleteVehicle_v2(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -158,16 +158,7 @@ public class VehicleController {
 //    }
 
 
-    // Delete vehicle by ID
-    @DeleteMapping("/delete-vehicle/{id}")
-    public ResponseEntity<?> deleteVehicle(@PathVariable Long id) {
-        try {
-            vehicleService.deleteVehicle(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
     @GetMapping("/vehicles-name/{companyId}")
     public ResponseEntity<List<VehicleDTO_v3>> getVehicleNameByCompanyId (@PathVariable Long companyId) {
