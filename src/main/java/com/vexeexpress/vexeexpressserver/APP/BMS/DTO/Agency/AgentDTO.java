@@ -14,4 +14,5 @@ public class AgentDTO {
     private Long companyId;
     private Date createdAt;
     private Long levelAgencyId;
+    private String levelAgencyName;
 }

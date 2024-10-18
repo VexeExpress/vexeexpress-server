@@ -1,14 +1,19 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.controller;
 
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.LevelAgency.LevelAgencyDTO;
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router.RouterDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router.RouterDTO_v2;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.CompanyService;
 import com.vexeexpress.vexeexpressserver.APP.BMS.service.RouterService;
+
+import com.vexeexpress.vexeexpressserver.entity.BmsLevelAgency;
 import com.vexeexpress.vexeexpressserver.entity.BmsRoute;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -21,7 +26,6 @@ public class RouterController {
     @Autowired
     CompanyService companyService;
 
-    // Tạo tuyến đường mới
     @GetMapping("/list-router/{companyId}")
     public ResponseEntity<?> getListRouteDetailByCompanyId(@PathVariable Long companyId) {
         try {
@@ -42,10 +46,10 @@ public class RouterController {
         }
     }
     @PostMapping("/create")
-    public ResponseEntity<?> createRouter_2(@RequestBody RouterDTO dto) {
+    public ResponseEntity<?> createRoute_2(@RequestBody RouterDTO dto) {
         try {
-            BmsRoute createdRouter = routerService.createRouter_2(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdRouter);
+            BmsRoute route = routerService.createRoute_2(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(route);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
@@ -53,11 +57,11 @@ public class RouterController {
         }
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateRouter_v2(@PathVariable Long id, @RequestBody RouterDTO dto) {
+    public ResponseEntity<?> updateRoute_v2(@PathVariable Long id, @RequestBody RouterDTO dto) {
         try {
-            BmsRoute updatedRouter = routerService.updateRouter_v2(id, dto);
-            if (updatedRouter != null) {
-                return ResponseEntity.ok(updatedRouter);
+            BmsRoute route = routerService.updateRoute_v2(id, dto);
+            if (route != null) {
+                return ResponseEntity.ok(route);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -66,10 +70,10 @@ public class RouterController {
         }
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteRouter_v2(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRoute(@PathVariable Long id) {
         System.out.println(id);
         try {
-            routerService.deleteRouter_v2(id);
+            routerService.deleteRoute(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

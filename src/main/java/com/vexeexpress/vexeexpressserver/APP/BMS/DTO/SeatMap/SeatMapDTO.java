@@ -7,10 +7,11 @@ import java.util.List;
 
 @Data
 public class SeatMapDTO {
+    private Long id;
     private String seatMapName;
     private Integer floor;
     private Integer row;
     private Integer column;
     private List<SeatDTO> seats;
-    private CompanyDTO company;
+    private Long companyId;
 }

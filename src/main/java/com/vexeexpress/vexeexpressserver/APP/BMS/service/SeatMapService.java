@@ -1,10 +1,7 @@
 package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.SeatMap.*;
-import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
-import com.vexeexpress.vexeexpressserver.entity.BmsSeat;
-import com.vexeexpress.vexeexpressserver.entity.BmsSeatMap;
-import com.vexeexpress.vexeexpressserver.entity.BmsTrip;
+import com.vexeexpress.vexeexpressserver.entity.*;
 import com.vexeexpress.vexeexpressserver.repository.CompanyRepository;
 import com.vexeexpress.vexeexpressserver.repository.SeatMapRepository;
 import com.vexeexpress.vexeexpressserver.repository.SeatRepository;
@@ -29,41 +26,41 @@ public class SeatMapService {
     @Autowired
     SeatRepository seatRepository;
 
-    public BmsSeatMap createSeatMap(SeatMapDTO seatMapDTO) {
-        // Create BmsSeatMap object from DTO
-        BmsSeatMap seatMap = new BmsSeatMap();
-        seatMap.setSeatMapName(seatMapDTO.getSeatMapName());
-        seatMap.setSeatColumn(seatMapDTO.getColumn());
-        seatMap.setRow(seatMapDTO.getRow());
-        seatMap.setFloor(seatMapDTO.getFloor());
-
-
-        // Get company info from database; ignore ResourceNotFoundException
-        Optional<BmsBusCompany> optionalCompany = companyRepository.findById(seatMapDTO.getCompany().getId());
-        if (optionalCompany.isPresent()) {
-            seatMap.setCompany(optionalCompany.get());
-        } else {
-            seatMap.setCompany(null);
-        }
-
-        // Map seat list from DTO to entity
-        List<BmsSeat> seats = seatMapDTO.getSeats().stream().map(seatDTO -> {
-            BmsSeat seat = new BmsSeat();
-            seat.setFloor(seatDTO.getFloor());
-            seat.setRow(seatDTO.getRow());
-            seat.setSeatColumn(seatDTO.getColumn());
-            seat.setName(seatDTO.getName());
-            seat.setStatus(seatDTO.getStatus());
-            seat.setBmsSeatMap(seatMap);
-            return seat;
-        }).collect(Collectors.toList());
-
-        // Set seat list for the seat map
-        seatMap.setSeats(seats);
-
-        // Save seat map and related seats
-        return seatMapRepository.save(seatMap);
-    }
+//    public BmsSeatMap createSeatMap(SeatMapDTO seatMapDTO) {
+//        // Create BmsSeatMap object from DTO
+//        BmsSeatMap seatMap = new BmsSeatMap();
+//        seatMap.setSeatMapName(seatMapDTO.getSeatMapName());
+//        seatMap.setSeatColumn(seatMapDTO.getColumn());
+//        seatMap.setRow(seatMapDTO.getRow());
+//        seatMap.setFloor(seatMapDTO.getFloor());
+//
+//
+//        // Get company info from database; ignore ResourceNotFoundException
+//        Optional<BmsBusCompany> optionalCompany = companyRepository.findById(seatMapDTO.getCompany().getId());
+//        if (optionalCompany.isPresent()) {
+//            seatMap.setCompany(optionalCompany.get());
+//        } else {
+//            seatMap.setCompany(null);
+//        }
+//
+//        // Map seat list from DTO to entity
+//        List<BmsSeat> seats = seatMapDTO.getSeats().stream().map(seatDTO -> {
+//            BmsSeat seat = new BmsSeat();
+//            seat.setFloor(seatDTO.getFloor());
+//            seat.setRow(seatDTO.getRow());
+//            seat.setSeatColumn(seatDTO.getColumn());
+//            seat.setName(seatDTO.getName());
+//            seat.setStatus(seatDTO.getStatus());
+//            seat.setBmsSeatMap(seatMap);
+//            return seat;
+//        }).collect(Collectors.toList());
+//
+//        // Set seat list for the seat map
+//        seatMap.setSeats(seats);
+//
+//        // Save seat map and related seats
+//        return seatMapRepository.save(seatMap);
+//    }
 
 
 //    public List<SeatMapDTO_v2> getSeatMapByCompanyId(Long companyId) {
@@ -132,26 +129,170 @@ public class SeatMapService {
         return tripRepository.findById(tripId).map(BmsTrip::getSeatMapId);
     }
 
-    public SeatMapDTO_v4 getSeatMapById(Long id) {
-        // Validate the ID
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID must be greater than 0");
+//    public SeatMapDTO_v4 getSeatMapById(Long id) {
+//        // Validate the ID
+//        if (id == null || id <= 0) {
+//            throw new IllegalArgumentException("ID must be greater than 0");
+//        }
+//
+//        try {
+//            Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
+//
+//            // Check if the seat map exists
+//            return seatMap.map(this::convertToDTO)
+//                    .orElseThrow(() -> new EntityNotFoundException("Seat map not found with ID: " + id));
+//        } catch (DataAccessException e) {
+//            // Handle database access errors
+//            throw new RuntimeException("Database error occurred while retrieving seat map", e);
+//        }
+//    }
+
+//    private SeatMapDTO_v4 convertToDTO(BmsSeatMap bmsSeatMap) {
+//        return null;
+//    }
+
+    public List<SeatMapDTO> getListSeatMapDetailByCompanyId(Long companyId) {
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId must not be null");
         }
+        List<BmsSeatMap> seatMaps = seatMapRepository.findByCompanyId(companyId);
+        if(seatMaps == null || seatMaps.isEmpty()) {
+            return null;
+        }
+        return seatMaps.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 
-        try {
-            Optional<BmsSeatMap> seatMap = seatMapRepository.findById(id);
+    private SeatMapDTO convertToDTO(BmsSeatMap seatMap) {
+        SeatMapDTO seatMapDTO = new SeatMapDTO();
+        seatMapDTO.setId(seatMap.getId());
+        seatMapDTO.setSeatMapName(seatMap.getSeatMapName());
+        seatMapDTO.setRow(seatMap.getRow());
+        seatMapDTO.setFloor(seatMap.getFloor());
+        seatMapDTO.setColumn(seatMap.getSeatColumn());
+        seatMapDTO.setSeats(seatMap.getSeats().stream().map(this::convertToDTO_v2).collect(Collectors.toList()));
 
-            // Check if the seat map exists
-            return seatMap.map(this::convertToDTO)
-                    .orElseThrow(() -> new EntityNotFoundException("Seat map not found with ID: " + id));
-        } catch (DataAccessException e) {
-            // Handle database access errors
-            throw new RuntimeException("Database error occurred while retrieving seat map", e);
+        return seatMapDTO;
+    }
+
+    private SeatDTO convertToDTO_v2(BmsSeat seat) {
+        SeatDTO seatDTO = new SeatDTO();
+        seatDTO.setId(seat.getId());
+        seatDTO.setColumn(seat.getSeatColumn());
+        seatDTO.setName(seat.getName());
+        seatDTO.setRow(seat.getRow());
+        seatDTO.setFloor(seat.getFloor());
+        seatDTO.setStatus(seat.getStatus());
+        return seatDTO;
+    }
+
+    public BmsSeatMap createSeatMap(SeatMapDTO dto) {
+        System.out.println(dto);
+        Optional<BmsBusCompany> companyOpt = companyRepository.findById(dto.getCompanyId());
+        if (companyOpt.isEmpty()) {
+            throw new IllegalArgumentException("Company ID không hợp lệ.");
+        }
+        BmsSeatMap seatMap = new BmsSeatMap();
+        seatMap.setSeatMapName(dto.getSeatMapName());
+        seatMap.setFloor(dto.getFloor());
+        seatMap.setRow(dto.getRow());
+        seatMap.setSeatColumn(dto.getColumn());
+        seatMap.setCompany(companyOpt.get());
+
+        BmsSeatMap savedSeatMap = seatMapRepository.save(seatMap);
+        if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+            List<BmsSeat> seats = dto.getSeats().stream().map(seatDto -> {
+                BmsSeat seat = new BmsSeat();
+                seat.setFloor(seatDto.getFloor());
+                seat.setRow(seatDto.getRow());
+                seat.setSeatColumn(seatDto.getColumn());
+                seat.setName(seatDto.getName());
+                seat.setStatus(seatDto.getStatus());
+                seat.setBmsSeatMap(savedSeatMap);
+                return seat;
+            }).collect(Collectors.toList());
+
+            seatRepository.saveAll(seats);
+        }
+        return savedSeatMap;
+    }
+
+    public BmsSeatMap updateSeatMap(Long id, SeatMapDTO dto) {
+        Optional<BmsSeatMap> seatMapOptional = seatMapRepository.findById(id);
+        if (seatMapOptional.isPresent()) {
+            BmsSeatMap currentSeatMap = seatMapOptional.get();
+
+            Optional<BmsBusCompany> companyOpt = companyRepository.findById(dto.getCompanyId());
+            if (companyOpt.isEmpty()) {
+                throw new IllegalArgumentException("Company ID không hợp lệ.");
+            }
+
+            if (!currentSeatMap.getSeatMapName().equals(dto.getSeatMapName())) {
+                boolean seatMapNameExists = seatMapRepository.existsBySeatMapNameAndCompany_IdAndIdNot(
+                        dto.getSeatMapName(), dto.getCompanyId(), currentSeatMap.getId()
+                );
+                if (seatMapNameExists) {
+                    System.out.println("Sơ đồ: " + dto.getSeatMapName() + " đã tồn tại trong công ty: " + dto.getCompanyId());
+                    return null;
+                }
+            }
+
+            currentSeatMap.setSeatMapName(dto.getSeatMapName());
+            currentSeatMap.setSeatColumn(dto.getColumn());
+            currentSeatMap.setRow(dto.getRow());
+            currentSeatMap.setFloor(dto.getFloor());
+
+            BmsSeatMap updatedSeatMap = seatMapRepository.save(currentSeatMap);
+
+            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+                // Tìm ghế hiện tại
+                List<BmsSeat> existingSeats = seatRepository.findByBmsSeatMap_Id(updatedSeatMap.getId());
+
+
+                List<BmsSeat> updatedSeats = dto.getSeats().stream().map(seatDto -> {
+
+                    Optional<BmsSeat> existingSeatOpt = existingSeats.stream()
+                            .filter(seat -> seat.getFloor() == seatDto.getFloor()
+                                    && seat.getRow() == seatDto.getRow()
+                                    && seat.getSeatColumn() == seatDto.getColumn())
+                            .findFirst();
+
+                    BmsSeat seat;
+                    if (existingSeatOpt.isPresent()) {
+                        seat = existingSeatOpt.get();
+                        seat.setName(seatDto.getName());
+                        seat.setStatus(seatDto.getStatus());
+                    } else {
+
+                        seat = new BmsSeat();
+                        seat.setFloor(seatDto.getFloor());
+                        seat.setRow(seatDto.getRow());
+                        seat.setSeatColumn(seatDto.getColumn());
+                        seat.setName(seatDto.getName());
+                        seat.setStatus(seatDto.getStatus());
+                        seat.setBmsSeatMap(updatedSeatMap);
+                    }
+                    return seat;
+                }).collect(Collectors.toList());
+
+                seatRepository.saveAll(updatedSeats);
+            }
+
+            return updatedSeatMap;
+        } else {
+            throw new IllegalArgumentException("SeatMap ID không hợp lệ.");
         }
     }
 
-    private SeatMapDTO_v4 convertToDTO(BmsSeatMap bmsSeatMap) {
-        return null;
+    public void deleteSeatMap(Long id) throws Exception {
+        if (seatMapRepository.existsById(id)) {
+            List<BmsSeat> seats = seatRepository.findByBmsSeatMap_Id(id);
+            if (!seats.isEmpty()) {
+                seatRepository.deleteAll(seats);
+            }
+            seatMapRepository.deleteById(id);
+        } else {
+            throw new Exception("Level Agency not found");
+        }
     }
 
 

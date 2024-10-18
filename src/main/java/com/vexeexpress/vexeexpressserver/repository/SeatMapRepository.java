@@ -13,4 +13,5 @@ public interface SeatMapRepository extends JpaRepository<BmsSeatMap, Long> {
 
     List<BmsSeatMap> findByCompanyId(Long companyId);
 
+    boolean existsBySeatMapNameAndCompany_IdAndIdNot(String seatMapName, Long companyId, Long id);
 }

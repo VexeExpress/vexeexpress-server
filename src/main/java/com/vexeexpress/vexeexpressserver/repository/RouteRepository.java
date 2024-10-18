@@ -10,6 +10,10 @@ import java.util.List;
 public interface RouteRepository extends JpaRepository<BmsRoute, Long> {
     List<BmsRoute> findByCompanyId(Long companyId);
 
+    boolean existsByRouteNameAndCompany_Id(String routeName, Long companyId);
+
+    boolean existsByRouteNameAndCompany_IdAndIdNot(String routeName, Long companyId, Long id);
+
 //    boolean existsByRouteNameAndCompany_IdAndIdNot(String routeName, Long companyId, Long id);
 //
 //    boolean existsByRouterNameAndCompany_Id(String routeName, Long companyId);
