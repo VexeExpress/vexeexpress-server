@@ -14,6 +14,8 @@ public interface RouteRepository extends JpaRepository<BmsRoute, Long> {
 
     boolean existsByRouteNameAndCompany_IdAndIdNot(String routeName, Long companyId, Long id);
 
+    List<BmsRoute> findAllActiveRoutersByCompanyId(Long companyId);
+
 //    boolean existsByRouteNameAndCompany_IdAndIdNot(String routeName, Long companyId, Long id);
 //
 //    boolean existsByRouterNameAndCompany_Id(String routeName, Long companyId);

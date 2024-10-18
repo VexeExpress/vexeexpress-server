@@ -80,20 +80,18 @@ public class RouterController {
         }
     }
 
-//    @GetMapping("/get-router-active/{companyId}")
-//    public ResponseEntity<List<RouterDTO_v2>> getActiveRoutersByCompanyId(@PathVariable Long companyId) {
-//        try {
-//            System.out.println("CompanyId: " + companyId);
-//            List<RouterDTO_v2> routers = routerService.getActiveRoutersByCompanyId(companyId);
-//            System.out.println(routers);
-//            return ResponseEntity.ok(routers);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Company not found or no active routers
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);  // General error
-//        }
-//
-//    }
+    @GetMapping("/list-router-action/{companyId}")
+    public ResponseEntity<List<RouterDTO_v2>> getActiveRoutersByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<RouterDTO_v2> routers = routerService.getActiveRoutersByCompanyId(companyId);
+            return ResponseEntity.ok(routers);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+    }
 
 
 

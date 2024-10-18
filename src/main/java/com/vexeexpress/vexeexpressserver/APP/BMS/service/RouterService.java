@@ -2,6 +2,7 @@ package com.vexeexpress.vexeexpressserver.APP.BMS.service;
 
 
 import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router.RouterDTO;
+import com.vexeexpress.vexeexpressserver.APP.BMS.DTO.Router.RouterDTO_v2;
 import com.vexeexpress.vexeexpressserver.entity.BmsBusCompany;
 import com.vexeexpress.vexeexpressserver.entity.BmsLevelAgency;
 import com.vexeexpress.vexeexpressserver.entity.BmsRoute;
@@ -99,19 +100,19 @@ public class RouterService {
     }
 
 
-//    public List<RouterDTO_v2> getActiveRoutersByCompanyId(Long companyId) {
-//        List<BmsRouter> routers = routerRepository.findAllActiveRoutersByCompanyId(companyId);
-//        if (routers.isEmpty()) {
-//            throw new EntityNotFoundException("Công ty không tồn tại hoặc không có router nào hoạt động.");
-//        }
-//        System.out.println(routers);
-//
-//        return routers.stream()
-//                .map(router -> new RouterDTO_v2(
-//                        router.getId(),
-//                        router.getRouteName(),
-//                        router.getDisplayPrice()
-//                ))
-//                .collect(Collectors.toList());
-//    }
+
+
+    public List<RouterDTO_v2> getActiveRoutersByCompanyId(Long companyId) {
+        List<BmsRoute> routers = routeRepository.findAllActiveRoutersByCompanyId(companyId);
+        if (routers.isEmpty()) {
+            throw new EntityNotFoundException("Công ty không tồn tại hoặc không có router nào hoạt động.");
+        }
+
+        return routers.stream()
+                .map(router -> new RouterDTO_v2(
+                        router.getId(),
+                        router.getRouteName()
+                ))
+                .collect(Collectors.toList());
+    }
 }
