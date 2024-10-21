@@ -150,6 +150,23 @@ public class SeatMapService {
 //    private SeatMapDTO_v4 convertToDTO(BmsSeatMap bmsSeatMap) {
 //        return null;
 //    }
+    public List<SeatMapDTO_v3> getListSeatMapNameByCompanyId(Long companyId) {
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId must not be null");
+        }
+        List<BmsSeatMap> seatMaps = seatMapRepository.findByCompanyId(companyId);
+        if(seatMaps == null || seatMaps.isEmpty()) {
+            return null;
+        }
+        return seatMaps.stream().map(this::convertToDTO_v3).collect(Collectors.toList());
+    }
+
+    private SeatMapDTO_v3 convertToDTO_v3(BmsSeatMap seatMap) {
+        SeatMapDTO_v3 dto = new SeatMapDTO_v3();
+        dto.setId(seatMap.getId());
+        dto.setSeatMapName(seatMap.getSeatMapName());
+        return dto;
+    }
 
     public List<SeatMapDTO> getListSeatMapDetailByCompanyId(Long companyId) {
         if (companyId == null) {
@@ -294,6 +311,8 @@ public class SeatMapService {
             throw new Exception("Level Agency not found");
         }
     }
+
+
 
 
 //    public SeatMapDTO_v4 convertToDTO(BmsSeatMap seatMap) {

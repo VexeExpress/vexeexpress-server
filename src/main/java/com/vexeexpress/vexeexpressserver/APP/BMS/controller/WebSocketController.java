@@ -18,7 +18,9 @@ public class WebSocketController {
 
     public static class ItemUpdate {
         private int itemId;
-        private String status;
+        private Boolean status;
+        private String username;
+        private Long userId;
 
         // Getters and setters...
         public int getItemId() {
@@ -29,12 +31,32 @@ public class WebSocketController {
             this.itemId = itemId;
         }
 
-        public String getStatus() {
+        public Boolean getStatus() {
             return status;
         }
 
-        public void setStatus(String status) {
+        public void setStatus(Boolean status) {
             this.status = status;
+        }
+
+
+
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
         }
     }
 }

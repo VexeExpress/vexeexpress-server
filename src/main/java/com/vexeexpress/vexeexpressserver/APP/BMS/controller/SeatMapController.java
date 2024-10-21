@@ -45,15 +45,7 @@ public class SeatMapController {
 //        }
 //    }
 
-    @GetMapping("/seat-maps-name/{companyId}")
-    public ResponseEntity<List<SeatMapDTO_v3>> getSeatMapsNameByCompanyId(@PathVariable Long companyId) {
-        try {
-            List<SeatMapDTO_v3> seatMap = seatMapService.getSeatMapsNameByCompanyId(companyId);
-            return ResponseEntity.ok(seatMap);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+
     @GetMapping("/seat-map-id-by-trip-id/{tripId}")
     public ResponseEntity<Long> getSeatMapIdByTripId(@PathVariable Long tripId) {
         if (tripId == null || tripId <= 0) {
@@ -109,6 +101,24 @@ public class SeatMapController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
+    @GetMapping("/list-seat-map-name/{companyId}")
+    public ResponseEntity<?> getListSeatMapNameByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<SeatMapDTO_v3> seatMap = seatMapService.getListSeatMapNameByCompanyId(companyId);
+            if (seatMap == null || seatMap.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+            }
+            return ResponseEntity.ok(seatMap);
+        } catch (IllegalArgumentException e) {
+            // Xử lý khi companyId không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
+        } catch (EntityNotFoundException e) {
+            // CompanyId null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
+    }
     @PostMapping("/create")
     public ResponseEntity<?> createSeatMap(@RequestBody SeatMapDTO dto) {
         try {
@@ -143,6 +153,8 @@ public class SeatMapController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
 
 

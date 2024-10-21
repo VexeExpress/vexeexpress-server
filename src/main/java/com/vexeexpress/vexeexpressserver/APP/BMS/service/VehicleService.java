@@ -46,6 +46,23 @@ public class VehicleService {
             return dto;
         }).collect(Collectors.toList());
     }
+    public List<VehicleDTO_v3> getListVehicleNameByCompanyId(Long companyId) {
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId must not be null");
+        }
+        List<BmsVehicle> vehicles = vehicleRepository.findByCompanyId(companyId);
+        if(vehicles == null || vehicles.isEmpty()) {
+            return null;
+        }
+        return vehicles.stream().map(this::convertToDTO_v3).collect(Collectors.toList());
+    }
+
+    private VehicleDTO_v3 convertToDTO_v3(BmsVehicle vehicle) {
+        VehicleDTO_v3 dto = new VehicleDTO_v3();
+        dto.setId(vehicle.getId());
+        dto.setLicensePlate(vehicle.getLicensePlate());
+        return dto;
+    }
 
     public List<VehicleDTO> getListVehicleDetailByCompanyId(Long companyId) {
         if (companyId == null) {
@@ -136,4 +153,6 @@ public class VehicleService {
             throw new Exception("Vehicle not found");
         }
     }
+
+
 }

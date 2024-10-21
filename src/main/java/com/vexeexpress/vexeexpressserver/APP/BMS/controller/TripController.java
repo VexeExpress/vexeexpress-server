@@ -53,15 +53,15 @@ public class TripController {
                     .body(null); // Return 500 Internal Server Error
         }
     }
-//    @GetMapping("/detail/{tripId}")
-//    public ResponseEntity<TripDTO_v3> tripDetail(@PathVariable Long tripId) {
-//        try {
-//            TripDTO_v3 tripDetails = tripService.getTripDetailsById(tripId);
-//            return new ResponseEntity<>(tripDetails, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @GetMapping("/detail/{tripId}")
+    public ResponseEntity<TripDTO_v3> tripDetail(@PathVariable Long tripId) {
+        try {
+            TripDTO_v3 tripDetails = tripService.getTripDetailsById(tripId);
+            return new ResponseEntity<>(tripDetails, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 //    @GetMapping("/get-info-trip/{tripId}")
 //    public ResponseEntity<TripDTO_v3> getTripDetails(@PathVariable Long tripId) {

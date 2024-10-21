@@ -70,6 +70,25 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
+    @GetMapping("/list-driver-name/{companyId}")
+    public ResponseEntity<?> getListDriverNameByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<UserDTO_v2> users = userService.getListDriverNameByCompanyId(companyId);
+
+            if (users == null || users.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+            }
+            return ResponseEntity.ok(users); // 200 OK
+        } catch (IllegalArgumentException e) {
+            // Xử lý khi companyId không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
+        } catch (EntityNotFoundException e) {
+            // CompanyId null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
+    }
     @PostMapping("/lock-user/{id}")
     public ResponseEntity<BmsUser> lockUser(@PathVariable Long id) {
         try {

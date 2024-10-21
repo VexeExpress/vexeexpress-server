@@ -80,7 +80,7 @@ public class RouterController {
         }
     }
 
-    @GetMapping("/list-router-action/{companyId}")
+    @GetMapping("/list-router-name-action/{companyId}")
     public ResponseEntity<List<RouterDTO_v2>> getActiveRoutersByCompanyId(@PathVariable Long companyId) {
         try {
             List<RouterDTO_v2> routers = routerService.getActiveRoutersByCompanyId(companyId);

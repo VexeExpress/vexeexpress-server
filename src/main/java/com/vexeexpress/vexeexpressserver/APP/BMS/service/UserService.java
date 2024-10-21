@@ -157,6 +157,24 @@ public class UserService {
     }
 
     /////
+    public List<UserDTO_v2> getListDriverNameByCompanyId(Long companyId) {
+        if (companyId == null) {
+            throw new IllegalArgumentException("companyId must not be null");
+        }
+        List<BmsUser> users = userRepository.findByCompanyId(companyId);
+        if(users == null || users.isEmpty()) {
+            return null;
+        }
+        return users.stream().filter(user -> user.getRole() != null && user.getRole().equals(1)).map(this::convertToDTO_v2).collect(Collectors.toList());
+    }
+
+    private UserDTO_v2 convertToDTO_v2(BmsUser user) {
+        UserDTO_v2 dto = new UserDTO_v2();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        return dto;
+    }
+
     public List<UserDTO> getListUserByCompanyId(Long companyId) {
         if (companyId == null) {
             throw new IllegalArgumentException("companyId must not be null");
@@ -293,4 +311,6 @@ public class UserService {
             throw new Exception("User not found");
         }
     }
+
+
 }

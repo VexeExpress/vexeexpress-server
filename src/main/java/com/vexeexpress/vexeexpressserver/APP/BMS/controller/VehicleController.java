@@ -46,6 +46,25 @@ public class VehicleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
     }
+    @GetMapping("/list-vehicle-name/{companyId}")
+    public ResponseEntity<?> getListVehicleNameByCompanyId(@PathVariable Long companyId) {
+        try {
+            List<VehicleDTO_v3> vehicles = vehicleService.getListVehicleNameByCompanyId(companyId);
+
+            if (vehicles == null || vehicles.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+            }
+            return ResponseEntity.ok(vehicles); // 200 OK
+        } catch (IllegalArgumentException e) {
+            // Xử lý khi companyId không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
+        } catch (EntityNotFoundException e) {
+            // CompanyId null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
+    }
     @PostMapping("/create")
     public ResponseEntity<?> createVehicle_2(@RequestBody VehicleDTO dto) {
         try {

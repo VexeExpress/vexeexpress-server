@@ -16,5 +16,5 @@ public class TripDTO_v3 {
     private List<String> user;
     private String seatMap;
     private String licensePlate;
-    private String vehcilePhone;
+    private String vehiclePhone;
 }
